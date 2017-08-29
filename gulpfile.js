@@ -6,10 +6,11 @@
     const angularFileSort = require('gulp-angular-filesort');
     const runSequence = require('run-sequence');
     const gls = require('gulp-live-server');
-
+    const KarmaServer = require('karma').Server;
 
     gulp.task('inject-dependencies', injectDependencies);
-    gulp.task('serve', serve);
+    gulp.task('serve', ['inject-dependencies'], serve);
+    gulp.task('unit-test', unitTest);
 
     // ============================================================w
 
@@ -24,19 +25,29 @@
             './node_modules/angular-ui-router/release/angular-ui-router.min.js'
         ], { read: false });
         let angularSources = gulp.src('./src/**/*.js').pipe(angularFileSort());
+        let cssSources = gulp.src(['./node_modules/angular-material/angular-material.min.css', './src/**/*.css'], { read: false });
 
         return target
+            .pipe(inject(cssSources))
             .pipe(inject(nodeSources, { name: 'node' }))
             .pipe(inject(angularSources, { name: 'angular' }))
             .pipe(gulp.dest('./tmp'));
     }
 
     function serve() {
-        let server = gls.static('./tmp/', 9000);
+        let server = gls.static(['/', 'tmp']);
         server.start();
         gulp.watch('./src/**/*.*', function(file) {
             server.notify.apply(server, [file]);
         });
+    }
+
+    function unitTest(done) {
+        new KarmaServer({
+            configFile: __dirname + '/karma.conf.js',
+            singleRun: true,
+            autoWatch: false
+        }, done).start();
     }
 
 })();

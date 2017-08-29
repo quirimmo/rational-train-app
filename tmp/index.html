@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myApp">
 
 <head>
     <meta charset="utf-8">
@@ -7,7 +7,12 @@
     <title>Rational Irish Trains App</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./assets/styles/style.css">
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/node_modules/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="/src/assets/styles/style.css">
+    <!-- endinject -->
+    
 </head>
 
 <body ng-app="myApp">
@@ -24,16 +29,10 @@
     <!-- endinject -->
 
     <!-- angular:js -->
+    <script src="/src/app.js"></script>
     <script src="/src/controllers/main.controller.js"></script>
     <script src="/src/config.js"></script>
-    <script src="/src/app.js"></script>
     <!-- endinject -->
-
-    <!-- <script src="./components/angular.min.js"></script>
-    <script src="./components/angular-ui-router.min.js"></script>
-    <script src="app.js"></script>
-    <script src="controller/main.controller.js"></script>
-    <script src="config.js"></script> -->
 
 </body>
 

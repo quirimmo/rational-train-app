@@ -7,7 +7,7 @@
         let mainState = {
             name: 'main',
             url: '/main',
-            templateUrl: 'template/main.html',
+            templateUrl: 'src/templates/main.html',
             controller: 'MainController'
         };
 
