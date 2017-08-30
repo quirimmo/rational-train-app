@@ -12,7 +12,7 @@ module.exports = function(config) {
             './node_modules/angular-ui-router/release/angular-ui-router.min.js',
 
             'src/**/*.js',
-            'test/**/*.spec.js'
+            'test/unit/**/*.spec.js'
         ]
     });
 };

@@ -1,46 +1,89 @@
 (function() {
+
     'use strict';
 
+    
+    // List of all the modules
+    // ============================================================
+    
     const gulp = require('gulp');
     const inject = require('gulp-inject');
     const angularFileSort = require('gulp-angular-filesort');
     const runSequence = require('run-sequence');
     const gls = require('gulp-live-server');
     const KarmaServer = require('karma').Server;
+    const protractor = require("gulp-protractor").protractor;
 
-    gulp.task('inject-dependencies', injectDependencies);
-    gulp.task('serve', ['inject-dependencies'], serve);
-    gulp.task('unit-test', unitTest);
-    gulp.task('unit-test-watch', unitTestWatch);
 
-    // ============================================================w
+    // List of all the static paths 
+    // ============================================================
 
-    function injectDependencies() {
-        let target = gulp.src('./src/index.html');
-        let nodeSources = gulp.src([
+    const PATHS = {
+        NODE_MODULES_COMPONENTS: [
             './node_modules/jquery/dist/jquery.min.js',
             './node_modules/angular/angular.min.js',
             './node_modules/angular-aria/angular-aria.min.js',
             './node_modules/angular-animate/angular-animate.min.js',
             './node_modules/angular-material/angular-material.min.js',
             './node_modules/angular-ui-router/release/angular-ui-router.min.js'
-        ], { read: false });
-        let angularSources = gulp.src('./src/**/*.js').pipe(angularFileSort());
-        let cssSources = gulp.src(['./node_modules/angular-material/angular-material.min.css', './src/**/*.css'], { read: false });
+        ],
+        MAIN_INDEX: './src/index.html',
+        SOURCE_FILES: './src/**/*.*',
+        SOURCE_JS_FILES: './src/**/*.js',
+        APP_STYLES: './src/**/*.css',
+        EXTERNAL_STYLES: [
+            './node_modules/angular-material/angular-material.min.css'
+        ],
+        TMP_APP: './tmp',
+        ROOT_APP: '/',
+        KARMA_CONFIG_FILE: './karma.conf.js',
+        PROTRACTOR_CONFIG_FILE: './protractor.conf.js',
+        E2E_TESTS: './test/e2e/**/*.spec.js'
+    };
+
+
+    // List of all the available tasks
+    // ============================================================
+
+    gulp.task('inject-dependencies', injectDependencies);
+    gulp.task('serve', ['inject-dependencies'], serve);
+    gulp.task('serve-no-watch', ['inject-dependencies'], serveNoWatch);
+    gulp.task('unit-test', unitTest);
+    gulp.task('unit-test-watch', unitTestWatch);
+    gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
+
+
+    // Private functions
+    // ============================================================
+
+    function injectDependencies() {
+        let target = gulp.src(PATHS.MAIN_INDEX);
+        let nodeSources = gulp.src(PATHS.NODE_MODULES_COMPONENTS, { read: false });
+        let angularSources = gulp.src(PATHS.SOURCE_JS_FILES).pipe(angularFileSort());
+        // get all the styles concatenating them and leaving our style file at the end, so we can override all the external rules from our styles
+        let allStyles = [].concat(PATHS.EXTERNAL_STYLES, PATHS.APP_STYLES);
+        let cssSources = gulp.src(allStyles, { read: false });
 
         return target
             .pipe(inject(cssSources))
             .pipe(inject(nodeSources, { name: 'node' }))
             .pipe(inject(angularSources, { name: 'angular' }))
-            .pipe(gulp.dest('./tmp'));
+            .pipe(gulp.dest(PATHS.TMP_APP));
     }
 
     function serve() {
-        let server = gls.static(['/', 'tmp']);
+        let server = gls.static([PATHS.ROOT_APP, PATHS.TMP_APP]);
         server.start();
-        gulp.watch('./src/**/*.*', function(file) {
+        gulp.watch(PATHS.SOURCE_FILES, function(file) {
             server.notify.apply(server, [file]);
         });
+    }
+
+    let serverNoWatch;
+
+    function serveNoWatch() {
+        serverNoWatch = gls.static([PATHS.ROOT_APP, PATHS.TMP_APP]);
+        serverNoWatch.start();
     }
 
     function unitTest(done) {
@@ -53,16 +96,26 @@
 
     function startKarmaServer(done, watch = false) {
         new KarmaServer({
-            configFile: __dirname + '/karma.conf.js',
+            configFile: PATHS.KARMA_CONFIG_FILE,
             singleRun: !watch,
             autoWatch: watch
         }, onKarmaFinished).start();
+
         function onKarmaFinished(exitCode) {
             done();
-            // we need to call the process exit manually because there is at the moment an issue with karma server which doesn't stop immediately the task even 
-            // if calling the done callback
             process.exit(exitCode);
         }
+    }
+
+    function runProtractorTests() {
+        return gulp.src(PATHS.E2E_TESTS)
+            .pipe(protractor({
+                configFile: PATHS.PROTRACTOR_CONFIG_FILE
+            }))
+            .on('close', function() {
+                serverNoWatch.stop();
+            })
+            .on('error', function(e) { throw e; });
     }
 
 })();
