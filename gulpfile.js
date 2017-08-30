@@ -11,6 +11,7 @@
     gulp.task('inject-dependencies', injectDependencies);
     gulp.task('serve', ['inject-dependencies'], serve);
     gulp.task('unit-test', unitTest);
+    gulp.task('unit-test-watch', unitTestWatch);
 
     // ============================================================w
 
@@ -43,11 +44,25 @@
     }
 
     function unitTest(done) {
+        startKarmaServer(done);
+    }
+
+    function unitTestWatch(done) {
+        startKarmaServer(done, true);
+    }
+
+    function startKarmaServer(done, watch = false) {
         new KarmaServer({
             configFile: __dirname + '/karma.conf.js',
-            singleRun: true,
-            autoWatch: false
-        }, done).start();
+            singleRun: !watch,
+            autoWatch: watch
+        }, onKarmaFinished).start();
+        function onKarmaFinished(exitCode) {
+            done();
+            // we need to call the process exit manually because there is at the moment an issue with karma server which doesn't stop immediately the task even 
+            // if calling the done callback
+            process.exit(exitCode);
+        }
     }
 
 })();
