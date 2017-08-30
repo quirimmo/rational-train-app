@@ -2,10 +2,10 @@
 
     'use strict';
 
-    
+
     // List of all the modules
     // ============================================================
-    
+
     const gulp = require('gulp');
     const inject = require('gulp-inject');
     const angularFileSort = require('gulp-angular-filesort');
@@ -13,6 +13,8 @@
     const gls = require('gulp-live-server');
     const KarmaServer = require('karma').Server;
     const protractor = require("gulp-protractor").protractor;
+    const concat = require('gulp-concat');
+    const minify = require('gulp-minify');
 
 
     // List of all the static paths 
@@ -35,6 +37,7 @@
             './node_modules/angular-material/angular-material.min.css'
         ],
         TMP_APP: './tmp',
+        DIST_APP: './tmp',
         ROOT_APP: '/',
         KARMA_CONFIG_FILE: './karma.conf.js',
         PROTRACTOR_CONFIG_FILE: './protractor.conf.js',
@@ -51,6 +54,7 @@
     gulp.task('unit-test', unitTest);
     gulp.task('unit-test-watch', unitTestWatch);
     gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
+    gulp.task('publish', publishApp);
 
 
     // Private functions
@@ -118,81 +122,15 @@
             .on('error', function(e) { throw e; });
     }
 
+    function publishApp() {
+        return gulp.src(PATHS.NODE_MODULES_COMPONENTS.concat(PATHS.SOURCE_JS_FILES))
+            .pipe(concat('all.js'))
+            .pipe(minify({
+                ext: {
+                    min: '.min.js'
+                }
+            }))
+            .pipe(gulp.dest(PATHS.DIST_APP));
+    }
+
 })();
-
-
-
-
-// 'use strict';
-
-// const gulp = require('gulp');
-// const clean = require('gulp-clean');
-// const minify = require('gulp-minify');
-// const gls = require('gulp-live-server');
-// const protractor = require("gulp-protractor").protractor;
-
-// const PATH = {
-//     components: './src/app/components',
-//     dist: './dist',
-//     app: './src/app/',
-//     src: './src/qprotractor.js',
-//     test: './test/*.spec.js',
-//     protractorConfig: './protractor.config.js'
-// };
-// const APP_FILES_TO_WATCH = 'src/app/**/*.*';
-// const APP_COMPONENTS = [
-//     './node_modules/angular/angular.min.js',
-//     './node_modules/angular-ui-router/release/angular-ui-router.min.js'
-// ];
-
-
-// gulp.task('clean-dist', function() {
-//     return gulp.src(PATH.dist, { read: false }).pipe(clean());
-// });
-
-// gulp.task('clean-app-components', function() {
-//     return gulp.src(PATH.components, { read: false }).pipe(clean());
-// });
-
-// gulp.task('publish', ['clean-dist', 'copy-app-components'], function() {
-//     gulp
-//         .src(PATH.src)
-//         .pipe(minify({
-//             ext: {
-//                 min: '.min.js'
-//             }
-//         }))
-//         .pipe(gulp.dest(PATH.dist));
-// });
-
-// gulp.task('serve', ['publish'], function() {
-//     let server = gls.static(PATH.app, 9000);
-//     server.start();
-//     gulp.watch(APP_FILES_TO_WATCH, function(file) {
-//         server.notify.apply(server, [file]);
-//     });
-// });
-
-// let serverNoWatch;
-// gulp.task('serve-no-watch', ['publish'], function() {
-//     serverNoWatch = gls.static(PATH.app, 9000);
-//     serverNoWatch.start();
-// });
-
-// gulp.task('copy-app-components', ['clean-app-components'], function() {
-//     gulp
-//         .src(APP_COMPONENTS)
-//         .pipe(gulp.dest(PATH.components));
-// });
-
-// gulp.task('protractor-test', ['serve-no-watch'], function() {
-//     return gulp.src(PATH.test)
-//         .pipe(protractor({
-//             configFile: PATH.protractorConfig
-//         }))
-//         .on('close', function() {
-//             console.log('exit'); 
-//             serverNoWatch.stop();
-//         })
-//         .on('error', function(e) { throw e; });
-// });

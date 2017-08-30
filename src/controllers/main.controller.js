@@ -5,15 +5,22 @@
         .module('myApp')
         .controller('MainController', MainController);
 
-    MainController.$inject = [];
-    function MainController() {
+    MainController.$inject = ['trainService'];
+    function MainController(trainService) {
         var vm = this;
         
+        vm.getTrainsByStation = getTrainsByStation;
+
         activate();
 
         
         ////////////////
 
         function activate() { }
+
+        function getTrainsByStation() {
+            trainService.getTrainsByStation();
+        }
+
     }
 })();
