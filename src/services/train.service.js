@@ -1,20 +1,23 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').service('trainService', ['$http', trainService]);
+    angular.module('myApp').service('trainService', trainService);
 
-    function trainService($http) {
+    trainService.$inject = ['$http', 'ENDPOINTS_CONSTANTS'];
+
+    function trainService($http, ENDPOINTS_CONSTANTS) {
+
         this.getTrainsByStation = getTrainsByStation;
 
-        ////////////////
+        // ============================================================
+
 
         function getTrainsByStation() {
 
             let request = {
-                method: 'GET',
-                url: 'http://localhost:9000/http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=Bayside',
-                headers: {
-                    'Content-Type': 'application/xml'
+                url: 'irishrail/' + ENDPOINTS_CONSTANTS.GET_STATION_BY_NAME,
+                params: {
+                    StationDesc: 'Bayside'
                 }
             };
             $http(request).then(function(data) {
