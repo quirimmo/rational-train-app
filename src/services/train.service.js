@@ -20,7 +20,7 @@
                     StationDesc: 'Bayside'
                 }
             };
-            $http(request).then(function(data) {
+            $http(request).then(data => {
                 console.log(data);
             });
 

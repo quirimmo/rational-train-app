@@ -8,7 +8,6 @@
 
     const gulp = require('gulp');
     const inject = require('gulp-inject');
-    const angularFileSort = require('gulp-angular-filesort');
     const gls = require('gulp-live-server');
     const KarmaServer = require('karma').Server;
     const protractor = require("gulp-protractor").protractor;
@@ -41,7 +40,12 @@
         ROOT_APP: '/',
         KARMA_CONFIG_FILE: './karma.conf.js',
         PROTRACTOR_CONFIG_FILE: './protractor.conf.js',
-        E2E_TESTS: './test/e2e/**/*.spec.js'
+        E2E_TESTS: './test/e2e/**/*.spec.js',
+        ANGULAR_SOURCE_ORDER: [
+            'src/app.js',
+            'src/*/*.js',
+            'src/config.js'
+        ]
     };
 
 
@@ -57,14 +61,14 @@
     gulp.task('publish', publishApp);
     gulp.task('start-mirror-proxy', startMirrorProxy);
 
-    
+
     // Private functions
     // ============================================================
 
     function injectDependencies() {
         let target = gulp.src(PATHS.MAIN_INDEX);
         let nodeSources = gulp.src(PATHS.NODE_MODULES_COMPONENTS, { read: false });
-        let angularSources = gulp.src(PATHS.SOURCE_JS_FILES).pipe(angularFileSort());
+        let angularSources = gulp.src(PATHS.ANGULAR_SOURCE_ORDER);
         // get all the styles concatenating them and leaving our style file at the end, so we can override all the external rules from our styles
         let allStyles = [].concat(PATHS.EXTERNAL_STYLES, PATHS.APP_STYLES);
         let cssSources = gulp.src(allStyles, { read: false });
