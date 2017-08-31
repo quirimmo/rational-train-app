@@ -33,8 +33,7 @@
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",
-    "protractor": "^5.1.2",
-    "run-sequence": "^2.1.0"
+    "protractor": "^5.1.2"
   },
   "author": "Quirino Lo Russo",
   "license": "MIT",

@@ -9,12 +9,12 @@
     const gulp = require('gulp');
     const inject = require('gulp-inject');
     const angularFileSort = require('gulp-angular-filesort');
-    const runSequence = require('run-sequence');
     const gls = require('gulp-live-server');
     const KarmaServer = require('karma').Server;
     const protractor = require("gulp-protractor").protractor;
     const concat = require('gulp-concat');
     const minify = require('gulp-minify');
+    const spawn = require('child_process').spawn;
 
 
     // List of all the static paths 
@@ -49,14 +49,15 @@
     // ============================================================
 
     gulp.task('inject-dependencies', injectDependencies);
-    gulp.task('serve', ['inject-dependencies'], serve);
-    gulp.task('serve-no-watch', ['inject-dependencies'], serveNoWatch);
+    gulp.task('serve', ['inject-dependencies', 'start-mirror-proxy'], serve);
+    gulp.task('serve-no-watch', ['inject-dependencies', 'start-mirror-proxy'], serveNoWatch);
     gulp.task('unit-test', unitTest);
     gulp.task('unit-test-watch', unitTestWatch);
     gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
     gulp.task('publish', publishApp);
+    gulp.task('start-mirror-proxy', startMirrorProxy);
 
-
+    
     // Private functions
     // ============================================================
 
@@ -131,6 +132,10 @@
                 }
             }))
             .pipe(gulp.dest(PATHS.DIST_APP));
+    }
+
+    function startMirrorProxy() {
+        spawn('node', ['proxy.js'], { shell: true , detached: true });
     }
 
 })();
