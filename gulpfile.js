@@ -43,6 +43,8 @@
         E2E_TESTS: './test/e2e/**/*.spec.js',
         ANGULAR_SOURCE_ORDER: [
             'src/app.js',
+            'src/components/**/*.js',
+            'src/directives/**/*.js',
             'src/*/*.js',
             'src/config.js'
         ]

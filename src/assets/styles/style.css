@@ -1,0 +1,46 @@
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+.md-button {
+    background-color: #40C4FF !important;
+    color: #444;
+    white-space: normal;
+}
+
+.md-button:hover {
+    background-color: #8BDAFD !important;
+}
+
+.png-icon {
+    margin: 0 auto;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+}
+
+.list-item-container {
+    border-bottom: 2px solid #ccc;
+    background: #eee;
+    padding: 20px 16px !important;
+    margin-bottom: 20px;
+}
+
+.train-item-container {
+    margin: 0 auto;
+}
+
+.train-item-container div {
+    width: 100%;
+    text-align: left;
+}
+
+.train-item-container div label:first-child {
+    font-weight: bold;
+    word-break: break-word;
+}

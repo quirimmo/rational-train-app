@@ -12,18 +12,14 @@
         // ============================================================
 
 
-        function getTrainsByStation() {
-
+        function getTrainsByStation(startingStation) {
             let request = {
                 url: 'irishrail/' + ENDPOINTS_CONSTANTS.GET_STATION_BY_NAME,
                 params: {
-                    StationDesc: 'Bayside'
+                    StationDesc: startingStation
                 }
             };
-            $http(request).then(data => {
-                console.log(data);
-            });
-
+            return $http(request);
         }
 
     }

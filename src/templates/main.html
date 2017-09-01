@@ -1,3 +1,88 @@
-<div>
-    <button ng-click="vm.getTrainsByStation()">Get trains by station</button>
+<div layout="column" layout-align="center" layout-padding>
+
+    <md-content>
+
+        <div layout="row" layout-xs="column" layout-align="center center">
+            <md-input-container flex>
+                <label for="starting-station">Starting Station:</label>
+                <input id="starting-station" ng-model="vm.startingStation">
+            </md-input-container>
+            <md-button class="md-fab exchange-button" aria-label="Exchange" ng-click="vm.exchangeStations()">
+                <img class="png-icon" src="src/assets/images/exchange.png">
+            </md-button>
+            <md-input-container flex>
+                <label for="ending-station">Ending Station:</label>
+                <input id="ending-station" ng-model="vm.endingStation">
+            </md-input-container>
+            <md-button class="md-raised md-primary" ng-click="vm.searchTrains()">Search Trains</md-button>
+        </div>
+
+        <div layout="column">
+            <md-list flex>
+                <md-subheader class="md-no-sticky">List of the trains:</md-subheader>
+                <md-list-item class="md-1-line list-item-container" layout="row" ng-repeat="train in vm.trainsList track by $index">
+                    <div class="md-list-item-text train-item-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start stretch" flex>
+                        <div flex-value="10" train-info-container label-title="From:" label-value="{{train.Origin}} {{train.Origintime}}"></div>
+                        <!-- <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">From:</label>
+                            <label layout-align="end start" flex>{{train.Origin}} {{train.Origintime}}</label>
+                        </div> -->
+
+                        <div flex-value="10" train-info-container label-title="To:" label-value="{{train.Destination}} {{train.Destinationtime}}"></div>
+                        <!-- <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">To:</label>
+                            <label layout-align="end start" flex>{{train.Destination}} {{train.Destinationtime}}</label>
+                        </div> -->
+
+                        <div flex-value="15" train-info-container label-title="Status:" label-value="{{train.Status}}"></div>
+                        <!-- <div layout="column" flex="15" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Status:</label>
+                            <label layout-align="end start" flex>{{train.Status}}</label>
+                        </div> -->
+
+                        <div flex-value="10" train-info-container label-title="Last Update:" label-value="{{train.Lastlocation || 'Unknown'}}"></div>
+                        <!-- <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Last Update:</label>
+                            <label layout-align="end start" flex>{{train.Lastlocation || 'Unknown'}}</label>
+                        </div> -->
+
+                        <div flex-value="10" train-info-container label-title="Arriving:" label-value="{{train.Duein}}"></div>
+                        <!-- <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Arriving:</label>
+                            <label layout-align="end start" flex>{{train.Duein}} min</label>
+                        </div> -->
+
+                        <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Late:</label>
+                            <label layout-align="end start" flex>{{train.Late}} min</label>
+                        </div>
+                        <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Arrival:</label>
+                            <label layout-align="end start" flex>{{train.Exparrival}}</label>
+                        </div>
+                        <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Departure:</label>
+                            <label layout-align="end start" flex>{{train.Expdepart}}</label>
+                        </div>
+                        <div layout="column" flex="10" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Direction:</label>
+                            <label layout-align="end start" flex>{{train.Direction}}</label>
+                        </div>
+                        <div layout="column" flex="5" layout-sm="row" flex-sm="100" layout-xs="row" flex-xs="100">
+                            <label layout-align="start start" flex flex-sm="20" flex-xs="40">Type:</label>
+                            <label layout-align="end start" flex>{{train.Traintype}}</label>
+                        </div>
+                        <div layout="column" flex="10" layout-sm="column" layout-xs="column" flex-sm="100" flex-xs="100" layout-align-sm="center stretch" layout-align-xs="center stretch">
+                            <md-button class="md-raised md-primary">Open Details</md-button>
+                        </div>
+                    </div>
+
+                </md-list-item>
+            </md-list>
+        </div>
+
+
+    </md-content>
+
+
 </div>
