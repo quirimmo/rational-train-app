@@ -44,3 +44,17 @@
     font-weight: bold;
     word-break: break-word;
 }
+
+.train-details-dialog {
+    width: 100%;
+}
+
+.close-dialog-img {
+    background: white;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}

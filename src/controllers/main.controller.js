@@ -14,6 +14,7 @@
         vm.startingStation = 'Arklow';
         vm.endingStation = 'Shankill';
         vm.trainsList = [];
+        vm.clicked = false;
 
         vm.exchangeStations = exchangeStations;
         vm.searchTrains = searchTrains;
@@ -28,10 +29,13 @@
         }
 
         function searchTrains() {
+            
             trainService.getTrainsByStation(vm.startingStation)
                 .then(data => {
+                    vm.clicked = true;
                     // need to create an array because when the train is only one, the api returns a single object instead of an array with one element
-                    vm.trainsList = [].concat(data.ArrayOfObjStationData.objStationData);
+                    vm.trainsList = data.ArrayOfObjStationData.objStationData ? [].concat(data.ArrayOfObjStationData.objStationData) : [];
+                    console.log(vm.trainsList);
                 });
         }
 
