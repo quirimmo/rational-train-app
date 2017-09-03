@@ -74,7 +74,6 @@
 
             async function timeoutDistanceCalculationRequests(i) {
                 await finalOrderedStations.push(await performDistanceCalculation(subStationsGroups[i]));
-                // if this is the last request, resolve the promise
                 // resolving the promise only at the last slice so the config block of the angular ui router state gets loaded only when all the data has been loaded
                 if (i === subStationsGroups.length - 1) {
                     finalOrderedStations = [].concat.apply([], finalOrderedStations);
