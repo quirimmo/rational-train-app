@@ -1,9 +1,15 @@
 (function() {
     'use strict';
+    // create a custom interceptor in order to manage globally all the requests started to irishrail web service
+    // used for setting and executing default operations
+    // In this way we manage and execute all the common operations on the requests performed against irishrail
+    // Adding needed headers
+    // Replace the hook with the right url 
+    // Add the mirror service used for bypassing CORS requests
 
-    angular.module('myApp')
-        .factory('IrishRailInterceptorFactory', IrishRailInterceptorFactory)
+    angular.module('myApp').factory('IrishRailInterceptorFactory', IrishRailInterceptorFactory)
         .config(function($httpProvider) {
+            // register the new interceptor in AngularJS
             $httpProvider.interceptors.push('IrishRailInterceptorFactory');
         });
 
@@ -11,6 +17,7 @@
 
     function IrishRailInterceptorFactory(xmlJSONParserService, HTTP_CONSTANTS) {
 
+        // methods exposed by the service
         let factory = {
             request: request,
             requestError: requestError,
@@ -23,11 +30,7 @@
 
 
         function request(config) {
-            if (config.url.includes('irishrail')) {
-                // config.method = 'GET';
-                // config.headers['Content-Type'] = 'application/xml';
-                // config.headers['Accept'] = 'application/xml';
-                // config.url = config.url.replace('irishrail', 'http://localhost:9000/http://api.irishrail.ie/realtime/realtime.asmx');
+            if (config.url.includes(HTTP_CONSTANTS.API_URL_HOOK)) {
                 config.method = HTTP_CONSTANTS.DEFAULT_METHOD;
                 config.headers['Content-Type'] = HTTP_CONSTANTS.DEFAULT_RESPONSE_CONTENT;
                 config.headers['Accept'] = HTTP_CONSTANTS.DEFAULT_RESPONSE_CONTENT;

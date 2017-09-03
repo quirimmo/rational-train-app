@@ -1,9 +1,7 @@
 (function() {
     'use strict';
 
-    angular
-        .module('myApp')
-        .controller('MainController', MainController);
+    angular.module('myApp').controller('MainController', MainController);
 
     MainController.$inject = ['allStations', 'trainService', '$rootScope'];
 
@@ -49,7 +47,7 @@
             trainService.getTrainsByStation(vm.startingStation.StationDesc)
                 .then(onGetTrainsByStation)
                 .catch(onGetTrainsByStationError);
-            
+
             function onGetTrainsByStationError(err) {
                 $rootScope.$broadcast('stop-loading', {});
                 throw new Error(err);

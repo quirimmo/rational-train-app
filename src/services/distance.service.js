@@ -7,6 +7,8 @@
 
     function distanceService($q) {
 
+        const TRAVEL_MODE = 'WALKING';
+
         this.calculateDistance = calculateDistance;
         this.calculateTimeDuration = calculateTimeDuration;
 
@@ -23,7 +25,7 @@
             service.getDistanceMatrix({
                 origins: [origin1],
                 destinations: [destination1],
-                travelMode: 'WALKING'
+                travelMode: TRAVEL_MODE
             }, callback);
 
             return deferred.promise;
@@ -42,7 +44,6 @@
                             duration: element.duration
                         });
                     }
-
                     deferred.resolve(data);
                 }
                 else {
