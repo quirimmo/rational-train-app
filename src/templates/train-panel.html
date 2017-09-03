@@ -23,9 +23,23 @@
                         </div>
                     </md-content>
                 </md-tab>
-                <md-tab label="Distance From Train">
+                <md-tab label="Distance From Train" class="distance-tab">
                     <md-content class="md-padding">
                         <div layou="column">
+                            <div class="distance-info">
+                                <h4>
+                                    The distance from the train station is <span>{{vm.distanceToTheStation}}</span> and you should take around <span>{{vm.timeToTheStation}}</span>
+                                </h4>
+                                <h4>
+                                    The train should arrive at the current station in around <span>{{vm.train.Duein}} mins</span> at <span>{{vm.train.Exparrival}}</span> and it should leave at <span>{{vm.train.Expdepart}}</span>
+                                </h4>
+                                <h4 ng-show="vm.isLate()">
+                                    <span>Unfortunately it seems you are late and the train will leave before you arrive :(</span>
+                                </h4>
+                                <h4 ng-hide="vm.isLate()">
+                                    <span class="in-time-for-the-train">You should be able to get the train :)</span>
+                                </h4>
+                            </div>
                             <div>
                                 <ng-map id="directions-map" center="{{vm.getCurrentPosition()}}" zoom="16">
                                     <directions draggable="true" panel="directions-panel" travel-mode="WALKING" origin="{{vm.getCurrentPosition()}}" destination="{{vm.getStationPosition()}}">

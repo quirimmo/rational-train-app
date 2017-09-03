@@ -79,3 +79,11 @@ table.adp-directions {
     z-index: 99999;
     text-align: center;
 }
+
+.distance-info h4 span {
+    color: red;
+}
+
+.distance-info h4 span.in-time-for-the-train {
+    color: green;
+}
