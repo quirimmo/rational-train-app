@@ -13,13 +13,16 @@
     <md-dialog-content>
         <md-content class="md-padding">
             <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="Train Tracking" ng-if="vm.train.Status !== 'No Information'">
+                <md-tab label="Train Tracking">
                     <md-content class="md-padding">
                         <div>
-                            <ng-map center="{{vm.getTrainPosition()}}" zoom="16">
+                            <ng-map ng-if="vm.isTrainPositionDefined()" center="{{vm.getTrainPosition()}}" zoom="16">
                                 <marker position="{{vm.getTrainPosition()}}">
                                 </marker>
                             </ng-map>
+                            <div ng-if="!vm.isTrainPositionDefined()">
+                                Unfortunately there are not tracking information associated to the current train
+                            </div>
                         </div>
                     </md-content>
                 </md-tab>

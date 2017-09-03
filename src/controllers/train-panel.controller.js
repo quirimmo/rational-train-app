@@ -9,13 +9,13 @@
         var vm = this;
 
         const UPDATE_TRAIN_POSITION_TIMEOUT = 30 * 1000;
-        
+
         vm.train = train;
         vm.trainPosition = trainPosition;
         vm.currentPosition = currentPosition;
         vm.distanceToTheStation;
         vm.timeToTheStation;
-        vm.timestampArrivingToTheStation; 
+        vm.timestampArrivingToTheStation;
         vm.timestampTrainDepartureFromTheStation;
         let updateTrainPositionInterval = undefined;
 
@@ -24,38 +24,30 @@
         vm.getCurrentPosition = getCurrentPosition;
         vm.getStationPosition = getStationPosition;
         vm.isLate = isLate;
+        vm.isTrainPositionDefined = isTrainPositionDefined;
 
         init();
 
         function init() {
             console.log(vm.train);
             console.log(vm.trainPosition);
-            if (angular.isDefined(vm.trainPosition) && vm.trainPosition.TrainStatus === 'R') {
-                // my idea was to create a real time tracking of the train, but it looks like irishtrail doesn't update the values of latitude and longitude constantly but just after a while 
+            // if the train is running, start the real time tracking
+            if (vm.isTrainPositionDefined() && isTrainRunning()) {
+                // my idea was to create a real time tracking of the train, 
+                // but it looks like irishtrail doesn't update the values of latitude and longitude constantly but just after a while 
                 updateTrainPositionInterval = $interval(updateTrainPosition, UPDATE_TRAIN_POSITION_TIMEOUT);
             }
             distanceService.calculateDistance(vm.currentPosition.latitude, vm.currentPosition.longitude, startingStation.StationLatitude, startingStation.StationLongitude)
-            .then(data => {
+                .then(onCalculateDistanceSuccess)
+                .catch(onError);
+
+            function onCalculateDistanceSuccess(data) {
                 vm.distanceToTheStation = data[0].distance.text;
                 vm.timeToTheStation = data[0].duration.text;
-
-                let expDepart = vm.train.Expdepart;
-                let d = new Date();
-                let parts = expDepart.match(/(\d+):(\d+)/);
-                let hours = parts[1];
-                let minutes = parts[2];
-                d.setHours(hours);
-                d.setMinutes(minutes);
-                
-                let d2 = new Date();
-                d2.setMinutes(data[0].duration.value / 60);
-
-                vm.timestampTrainDepartureFromTheStation = d.getTime(); 
-                vm.timestampArrivingToTheStation = d2.getTime();
-            })
-            .catch(err => {
-                throw new Error(err);
-            });
+                let calculatedDistance = distanceService.calculateTimeDuration(data[0].duration.value / 60, vm.train.Expdepart);
+                vm.timestampTrainDepartureFromTheStation = calculatedDistance.originTimeDate;
+                vm.timestampArrivingToTheStation = calculatedDistance.arrivingTimeDate;
+            }
         }
 
         function closePanel() {
@@ -66,19 +58,39 @@
         }
 
         function updateTrainPosition() {
-            trainService.getCurrentTrains().then(data => {
+            trainService.getCurrentTrains()
+                .then(onGetCurrentTrainsSuccess)
+                .catch(onError);
+
+            function onGetCurrentTrainsSuccess(data) {
                 let trainsPositions = data.ArrayOfObjTrainPositions.objTrainPositions;
-                let currentTrainPosition = trainsPositions.find(train => train.TrainCode === vm.train.Traincode);
+                let currentTrainPosition = trainsPositions.find(getTrainByCode);
                 vm.trainPosition = currentTrainPosition;
                 NavigatorGeolocation.getCurrentPosition()
-                    .then(position => {
-                        vm.currentPosition.latitude = position.coords.latitude;
-                        vm.currentPosition.longitude = position.coords.longitude;
-                    })
-                    .catch(err => {
-                        throw new Error(err);
-                    });
-            });
+                    .then(onGetCurrentPositionSuccess)
+                    .catch(onError);
+
+                function onGetCurrentPositionSuccess(position) {
+                    vm.currentPosition.latitude = position.coords.latitude;
+                    vm.currentPosition.longitude = position.coords.longitude;
+                }
+
+                function getTrainByCode(train) {
+                    return train.TrainCode === vm.train.Traincode;
+                }
+            }
+        }
+
+        function onError(err) {
+            throw new Error(err);
+        }
+
+        function isTrainRunning() {
+            return vm.trainPosition.TrainStatus === 'R';
+        }
+
+        function isTrainPositionDefined() {
+            return angular.isDefined(vm.trainPosition);
         }
 
         function isLate() {
