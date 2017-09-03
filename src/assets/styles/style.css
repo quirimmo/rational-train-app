@@ -87,3 +87,7 @@ table.adp-directions {
 .distance-info h4 span.in-time-for-the-train {
     color: green;
 }
+
+.md-primary[disabled] {
+    background-color: #ccc !important;
+}

@@ -23,6 +23,7 @@
         NODE_MODULES_COMPONENTS: [
             './node_modules/jquery/dist/jquery.min.js',
             './node_modules/angular/angular.min.js',
+            './node_modules/angular-messages/angular-messages.min.js',
             './node_modules/angular-aria/angular-aria.min.js',
             './node_modules/angular-animate/angular-animate.min.js',
             './node_modules/angular-material/angular-material.min.js',
@@ -39,7 +40,7 @@
         TMP_APP: './tmp',
         DIST_APP: './tmp',
         ROOT_APP: '/',
-        KARMA_CONFIG_FILE: './karma.conf.js',
+        KARMA_CONFIG_FILE: `${__dirname}/karma.conf.js`,
         PROTRACTOR_CONFIG_FILE: './protractor.conf.js',
         E2E_TESTS: './test/e2e/**/*.spec.js',
         ANGULAR_SOURCE_ORDER: [
@@ -111,7 +112,8 @@
         new KarmaServer({
             configFile: PATHS.KARMA_CONFIG_FILE,
             singleRun: !watch,
-            autoWatch: watch
+            autoWatch: watch,
+            logLevel: 'DEBUG'
         }, onKarmaFinished).start();
 
         function onKarmaFinished(exitCode) {

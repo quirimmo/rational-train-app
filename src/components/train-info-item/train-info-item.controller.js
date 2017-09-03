@@ -20,8 +20,6 @@
             trainService.getCurrentTrains()
             .then(data => {
                 let trainsPositions = data.ArrayOfObjTrainPositions.objTrainPositions; 
-                console.log(trainsPositions);
-                console.log(vm.train);
                 let currentTrainPosition = trainsPositions.find(train => train.TrainCode === vm.train.Traincode);
 
                 NavigatorGeolocation.getCurrentPosition()
@@ -30,31 +28,35 @@
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     };
-                    $mdDialog.show({
-                        controller: 'TrainPanelController',
-                        controllerAs: 'vm',
-                        templateUrl: 'src/templates/train-panel.html',
-                        parent: angular.element(document.body),
-                        targetEvent: ev,
-                        clickOutsideToClose: true,
-                        fullscreen: true,
-                        locals: {
-                            train: vm.train,
-                            trainPosition: currentTrainPosition,
-                            currentPosition: currentPosition,
-                            startingStation: vm.startingStation
-                        }
-                    });
+                    openModal(currentTrainPosition, currentPosition);
                 })
-                .catch(err => {
-                    throw new Error(err);
-                });
+                .catch(throwError);
 
             })
-            .catch(err => {
-                throw new Error(err);
-            });
+            .catch(throwError);
             
+            function throwError(err) {
+                throw new Error(err);
+            }
+
+            function openModal(currentTrainPosition, currentPosition) {
+                $mdDialog.show({
+                    controller: 'TrainPanelController',
+                    controllerAs: 'vm',
+                    templateUrl: 'src/templates/train-panel.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: true,
+                    locals: {
+                        train: vm.train,
+                        trainPosition: currentTrainPosition,
+                        currentPosition: currentPosition,
+                        startingStation: vm.startingStation
+                    }
+                });
+            }
+
         }
 
     }

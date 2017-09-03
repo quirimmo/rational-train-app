@@ -1,6 +1,6 @@
 (function() {
     'use strict';
 
-    angular.module('myApp', ['ui.router', 'ngMaterial', 'ngMap']);
+    angular.module('myApp', ['ui.router', 'ngMaterial', 'ngMap', 'ngMessages']);
 
 })();
