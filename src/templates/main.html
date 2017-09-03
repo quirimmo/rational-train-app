@@ -4,17 +4,21 @@
 
         <ng-form name="searchTrainsForm">
             <div layout="row" layout-xs="column" layout-align="center center">
-                <md-input-container flex>
-                    <label for="starting-station">Starting Station:</label>
-                    <input id="starting-station" ng-model="vm.startingStation">
-                </md-input-container>
+                <md-autocomplete flex md-input-name="autocomplete-starting-station" md-selected-item="vm.startingStation" md-search-text="vm.startingStationSearchText" md-items="station in vm.getFilteredStations(vm.startingStationSearchText)" md-item-text="station.StationDesc"
+                    md-require-match md-floating-label="Starting Station: ">
+                    <md-item-template>
+                        <span md-highlight-text="vm.startingStationSearchText">{{station.StationDesc}}</span>
+                    </md-item-template>
+                </md-autocomplete>
                 <md-button class="md-fab exchange-button" aria-label="Exchange" ng-click="vm.exchangeStations()">
                     <img class="png-icon" src="src/assets/images/exchange.png">
                 </md-button>
-                <md-input-container flex>
-                    <label for="ending-station">Ending Station:</label>
-                    <input id="ending-station" ng-model="vm.endingStation">
-                </md-input-container>
+                <md-autocomplete flex md-input-name="autocomplete-ending-station" md-selected-item="vm.endingStation" md-search-text="vm.endingStationSearchText" md-items="station in vm.getFilteredStations(vm.endingStationSearchText)" md-item-text="station.StationDesc"
+                    md-require-match md-floating-label="Ending Station: ">
+                    <md-item-template>
+                        <span md-highlight-text="vm.endingStationSearchText">{{station.StationDesc}}</span>
+                    </md-item-template>
+                </md-autocomplete>
                 <md-button class="md-raised md-primary" ng-click="vm.searchTrains()">Search Trains</md-button>
             </div>
         </ng-form>
@@ -23,7 +27,7 @@
             <md-list flex>
                 <h3 ng-show="vm.trainsList.length === 0 && vm.clicked">There are no trains which match your research</h3>
                 <md-subheader ng-show="vm.trainsList.length" class="md-no-sticky">List of the trains:</md-subheader>
-                <train-info-item ng-repeat="train in vm.trainsList track by $index" train="train"></train-info-item>
+                <train-info-item ng-repeat="train in vm.trainsList track by $index" train="train" starting-station="vm.startingStation"></train-info-item>
             </md-list>
         </div>
 

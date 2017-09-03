@@ -9,7 +9,9 @@
     });
     
     angular.module('myApp').constant('ENDPOINTS_CONSTANTS', {
-        GET_STATION_BY_NAME: 'getStationDataByNameXML'
+        GET_STATION_BY_NAME: 'getStationDataByNameXML',
+        GET_CURRENT_TRAINS: 'getCurrentTrainsXML',
+        GET_ALL_STATIONS: 'getAllStationsXML'
     });
 
 })();

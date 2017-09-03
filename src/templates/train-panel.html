@@ -13,13 +13,11 @@
     <md-dialog-content>
         <md-content class="md-padding">
             <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="Train Tracking">
+                <md-tab label="Train Tracking" ng-if="vm.train.Status !== 'No Information'">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Train Tracking</h1>
                         <div>
-                            <p>Real time train tracking</p>
-                            <ng-map center="52.6587,-8.62397" zoom="16">
-                                <marker position="[52.6587,-8.62397]" on-click="myfunc()">
+                            <ng-map center="{{vm.getTrainPosition()}}" zoom="16">
+                                <marker position="{{vm.getTrainPosition()}}">
                                 </marker>
                             </ng-map>
                         </div>
@@ -27,9 +25,15 @@
                 </md-tab>
                 <md-tab label="Distance From Train">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Distance From Train</h1>
-                        <div>
-                            Distance from train
+                        <div layou="column">
+                            <div>
+                                <ng-map id="directions-map" center="{{vm.getCurrentPosition()}}" zoom="16">
+                                    <directions draggable="true" panel="directions-panel" travel-mode="WALKING" origin="{{vm.getCurrentPosition()}}" destination="{{vm.getStationPosition()}}">
+                                    </directions>
+                                </ng-map>
+                            </div>
+                            <div id="directions-panel">
+                            </div>
                         </div>
                     </md-content>
                 </md-tab>

@@ -12,6 +12,7 @@
         <div flex-value="10" train-info-container label-title="Type:" label-value="{{vm.train.Traintype}}"></div>
         <div layout="column" flex="10" layout-sm="column" layout-xs="column" flex-sm="100" flex-xs="100" layout-align-sm="center stretch" layout-align-xs="center stretch">
             <md-button class="md-raised md-primary" ng-click="vm.openTrainPanel($event)">Open Details</md-button>
+            <!-- ng-disabled="vm.train.Status === 'No Information'" -->
         </div>
     </div>
 </md-list-item>
