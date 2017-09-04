@@ -29,8 +29,6 @@
         init();
 
         function init() {
-            console.log(vm.train);
-            console.log(vm.trainPosition);
             // if the train is running, start the real time tracking
             if (vm.isTrainPositionDefined() && isTrainRunning()) {
                 // my idea was to create a real time tracking of the train, 

@@ -37,6 +37,7 @@
                     response.rows.forEach(row => {
                         row.elements.forEach(forEveryElement);
                     });
+                    deferred.resolve(data);
 
                     function forEveryElement(element) {
                         data.push({
@@ -44,7 +45,6 @@
                             duration: element.duration
                         });
                     }
-                    deferred.resolve(data);
                 }
                 else {
                     deferred.reject(`Error calculating the distance.\nStatus: ${status}\nError: ${response}`);
@@ -53,16 +53,15 @@
         }
 
         function calculateTimeDuration(arrivingTime, destinationTime) {
-            let destinationDeparture = destinationTime;
             let destinationDate = new Date();
-            let retrievedTime = destinationDeparture.match(/(\d+):(\d+)/);
+            let retrievedTime = destinationTime.match(/(\d+):(\d+)/);
             let hours = retrievedTime[1];
             let minutes = retrievedTime[2];
             destinationDate.setHours(hours);
             destinationDate.setMinutes(minutes);
 
             let originDate = new Date();
-            originDate.setMinutes(arrivingTime);
+            originDate.setMinutes(originDate.getMinutes() + arrivingTime);
 
             return {
                 arrivingTimeDate: originDate,

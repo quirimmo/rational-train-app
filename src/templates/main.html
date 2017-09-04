@@ -1,18 +1,9 @@
 <div layout="column" layout-align="center" layout-padding>
-
     <md-content>
-
         <ng-form name="searchTrainsForm" novalidate>
             <div layout="row" layout-xs="column" layout-align="center center">
-                <md-autocomplete flex 
-                required
-                md-input-name="autocompleteStartingStation" 
-                md-selected-item="vm.startingStation" 
-                md-search-text="vm.startingStationSearchText" 
-                md-items="station in vm.getFilteredStations(vm.startingStationSearchText)" 
-                md-item-text="station.StationDesc"
-                md-require-match 
-                md-floating-label="Starting Station:">
+                <md-autocomplete flex required md-input-name="autocompleteStartingStation" md-selected-item="vm.startingStation" md-search-text="vm.startingStationSearchText" md-items="station in vm.getFilteredStations(vm.startingStationSearchText)" md-item-text="station.StationDesc"
+                    md-require-match md-floating-label="Starting Station:">
                     <md-item-template>
                         <span md-highlight-text="vm.startingStationSearchText">{{station.StationDesc}}</span>
                     </md-item-template>
@@ -24,15 +15,8 @@
                 <md-button class="md-fab exchange-button" aria-label="Exchange" ng-click="vm.exchangeStations()">
                     <img class="png-icon" src="src/assets/images/exchange.png">
                 </md-button>
-                <md-autocomplete flex 
-                required
-                md-input-name="autocompleteEndingStation" 
-                md-selected-item="vm.endingStation" 
-                md-search-text="vm.endingStationSearchText" 
-                md-items="station in vm.getFilteredStations(vm.endingStationSearchText)" 
-                md-item-text="station.StationDesc"
-                md-require-match 
-                md-floating-label="Ending Station:">
+                <md-autocomplete flex required md-input-name="autocompleteEndingStation" md-selected-item="vm.endingStation" md-search-text="vm.endingStationSearchText" md-items="station in vm.getFilteredStations(vm.endingStationSearchText)" md-item-text="station.StationDesc"
+                    md-require-match md-floating-label="Ending Station:">
                     <md-item-template>
                         <span md-highlight-text="vm.endingStationSearchText">{{station.StationDesc}}</span>
                     </md-item-template>
@@ -52,9 +36,5 @@
                 <train-info-item ng-repeat="train in vm.trainsList track by $index" train="train" starting-station="vm.startingStation"></train-info-item>
             </md-list>
         </div>
-
-
     </md-content>
-
-
 </div>

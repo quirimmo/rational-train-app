@@ -71,7 +71,6 @@
                     vm.trainsList = allTrainsList.filter(filterTrainsByTargetStation);
                     // filter all the movements keeping just the stations between the source and the destination
                     vm.trainsList.forEach(filterNotNeededMovements);
-                    console.log(vm.trainsList);
                     // finish the loading process displaying eventually results 
                     vm.clicked = true;
                     $rootScope.$broadcast('stop-loading', {});
