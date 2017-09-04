@@ -8,9 +8,14 @@
     function AjaxLoaderController($rootScope) {
 
         var vm = this;
+        vm.isLoading;
+        vm.loadingMessage;
+        vm.$onInit = onInit;
 
-        vm.isLoading = false;
-        vm.loadingMessage = 'Loading...';
+        function onInit() {
+            vm.isLoading = false;
+            vm.loadingMessage = 'Loading...';
+        }
 
         $rootScope.$on('start-loading', function(event, data) {
             vm.isLoading = true;

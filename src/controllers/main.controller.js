@@ -52,7 +52,6 @@
                 // need to create an array because when the train is only one, the api returns a single object instead of an array with one element
                 let allTrainsList = data.ArrayOfObjStationData.objStationData ? [].concat(data.ArrayOfObjStationData.objStationData) : [];
                 // here we need to filter the trains based on their movements in order to understand if it stops in the target station
-                console.log(allTrainsList);
                 let promises = [];
                 allTrainsList.forEach(setupCallForTrainMovements);
                 $q.all(promises)
@@ -64,7 +63,6 @@
                 }
 
                 function onGetTrainsMovements(data) {
-                    console.log('on get train movements');
                     // get the array of all the trains movements
                     let allTrainsMovements = data.map(el => el.ArrayOfObjTrainMovements.objTrainMovements);
                     // here add the movements to each train by Traincode 
@@ -78,7 +76,7 @@
                     $rootScope.$broadcast('stop-loading', {});
 
                     function addMovementsToTrain(train) {
-                        train.movements = allTrainsMovements.find(allTrainMovements => allTrainMovements.find(movement => movement.TrainCode === train.Traincode));
+                        train.movements = allTrainsMovements.find(allTrainMovements => allTrainMovements.find(movement => movement.TrainCode === train.Traincode)) || [];
                     }
 
                     function filterTrainsByTargetStation(train) {

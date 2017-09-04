@@ -14,9 +14,27 @@ describe('MainController', function() {
         },
         endingStation
     ];
+    let trainsStationMocked = {
+        ArrayOfObjStationData: {
+            objStationData: [{
+
+            }]
+        }
+    };
+    let trainsMovementsMocked = [{
+        ArrayOfObjTrainMovements: {
+            objTrainMovements: [{
+
+            }]
+        }
+    }];
     let trainServiceMock = {
-        getTrainsByStation: function() {},
-        getTrainMovements: function() {}
+        getTrainsByStation: function() {
+            return $q.resolve(trainsStationMocked);
+        },
+        getTrainMovements: function() {
+            return $q.resolve(trainsMovementsMocked);
+        }
     };
     let trainsByStationMock = [{
         StationDesc: "Docklands",
@@ -104,7 +122,6 @@ describe('MainController', function() {
 
             it('should send the $broadcast message for starting the loading with the right message', function() {
                 spyOn($rootScope, '$broadcast');
-                spyOn(trainService, 'getTrainsByStation').and.returnValue($q.resolve());
                 controller.searchTrains();
                 expect($rootScope.$broadcast).toHaveBeenCalledWith('start-loading', {
                     loadingMessage: 'Retrieving trains information'
@@ -112,42 +129,45 @@ describe('MainController', function() {
             });
 
             it('should call the trainService.getTrainsByStation method', function() {
-                spyOn(trainService, 'getTrainsByStation').and.returnValue($q.resolve());
+                spyOn(trainService, 'getTrainsByStation').and.callThrough();
                 controller.searchTrains();
                 expect(trainServiceMock.getTrainsByStation).toHaveBeenCalled();
             });
 
             it('should call the trainService.getTrainMovements method', function() {
-                spyOn(trainService, 'getTrainsByStation').and.returnValue($q.resolve({
-                    ArrayOfObjStationData: {
-                        objStationData: trainsByStationMock
-                    }
-                }));
-                spyOn(trainService, 'getTrainMovements').and.returnValue($q.resolve([]));
+                spyOn(trainService, 'getTrainMovements');
                 spyOn($q, 'all').and.returnValue($q.resolve([]));
                 controller.searchTrains();
-                $scope.$apply();
+                $scope.$digest();
                 expect(trainService.getTrainMovements).toHaveBeenCalled();
             });
 
-            // it('should stop the loading', function() {
-            //     spyOn(trainService, 'getTrainsByStation').and.returnValue($q.resolve({
-            //         ArrayOfObjStationData: {
-            //             objStationData: allStationsMock
-            //         }
-            //     }));
-            //     let deferred = $q.defer();
-            //     $q.resolve([{
-            //         ArrayOfObjTrainMovements: {
-            //             objTrainMovements: []
-            //         }
-            //     }]);
-            // spyOn($q, 'all').and.returnValue($q.resolve([]));
-            //     spyOn(trainService, 'getTrainMovements').and.returnValue(deferred.promise);
-            //     controller.searchTrains();
-            //     $scope.$apply();
-            //     // expect($rootScope.$broadcast).toHaveBeenCalledWith('stop-loading', {});
-            // });
+            it('should stop the loading', function() {
+                spyOn($q, 'all').and.returnValue($q.resolve([]));
+                controller.searchTrains();
+                spyOn($rootScope, '$broadcast').and.callThrough();
+                $scope.$digest();
+                expect($rootScope.$broadcast).toHaveBeenCalledWith('stop-loading', {});
+            });
+
+            it('should set clicked to true', function() {
+                spyOn($q, 'all').and.returnValue($q.resolve([]));
+                expect(controller.clicked).toEqual(false);
+                controller.searchTrains();
+                $scope.$digest();
+                expect(controller.clicked).toEqual(true);
+            });
+
+            it('should set up correctly the trainsList', function() {
+                spyOn($q, 'all').and.returnValue($q.resolve([]));
+                expect(controller.trainsList).toEqual([]);
+                controller.searchTrains();
+                $scope.$digest();
+                // here I should expect the list populated
+                // but need to pass all the objects correctly step by step 
+                // through the mocking objects
+                expect(controller.trainsList).toEqual([]);
+            });
 
         });
 
@@ -156,7 +176,7 @@ describe('MainController', function() {
             it('should set clicked to true if the request fails', function() {
                 spyOn(trainService, 'getTrainsByStation').and.returnValue($q.reject());
                 controller.searchTrains();
-                expect($scope.$apply).toThrow();
+                expect($scope.$digest).toThrow();
                 expect(controller.clicked).toEqual(true);
             });
 
@@ -164,7 +184,7 @@ describe('MainController', function() {
                 spyOn(trainService, 'getTrainsByStation').and.returnValue($q.reject());
                 controller.searchTrains();
                 spyOn($rootScope, '$broadcast').and.callThrough();
-                expect($scope.$apply).toThrow();
+                expect($scope.$digest).toThrow();
                 expect($rootScope.$broadcast).toHaveBeenCalledWith('stop-loading', {});
             });
 
