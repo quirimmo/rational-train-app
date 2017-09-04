@@ -17,14 +17,14 @@
                     <md-content class="md-padding">
                         <div layout="column">
                             <md-list flex>
-                                <md-subheader ng-show="vm.trainsList.length" class="md-no-sticky">List of the train next stops:</md-subheader>
+                                <md-subheader ng-show="vm.train.movements.length" class="md-no-sticky">List of the next stops:</md-subheader>
                                 <md-list-item class="md-1-line list-item-container" layout="row" ng-repeat="movement in vm.train.movements track by $index">
                                     <div class="md-list-item-text train-item-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start stretch" flex>
                                         <div flex-value="20" train-info-container label-title="Station:" label-value="{{movement.LocationFullName}}"></div>
-                                        <div flex-value="20" train-info-container label-title="Scheduled Arrival:" label-value="{{movement.ScheduledArrival}}"></div>
-                                        <div flex-value="20" train-info-container label-title="Expected Arrival:" label-value="{{movement.ExpectedArrival}}"></div>
-                                        <div flex-value="20" train-info-container label-title="Scheduled Departure:" label-value="{{movement.ScheduledDeparture}}"></div>
-                                        <div flex-value="20" train-info-container label-title="Expected Departure:" label-value="{{movement.ExpectedDeparture}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Sch Arrival:" label-value="{{movement.ScheduledArrival}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Exp Arrival:" label-value="{{movement.ExpectedArrival}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Sch Depart:" label-value="{{movement.ScheduledDeparture}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Exp Depart:" label-value="{{movement.ExpectedDeparture}}"></div>
                                     </div>
                                 </md-list-item>
                             </md-list>
