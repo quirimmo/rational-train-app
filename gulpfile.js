@@ -112,8 +112,7 @@
         new KarmaServer({
             configFile: PATHS.KARMA_CONFIG_FILE,
             singleRun: !watch,
-            autoWatch: watch,
-            logLevel: 'DEBUG'
+            autoWatch: watch
         }, onKarmaFinished).start();
 
         function onKarmaFinished(exitCode) {
