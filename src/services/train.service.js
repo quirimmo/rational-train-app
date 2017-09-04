@@ -10,6 +10,7 @@
         this.getAllStations = getAllStations;
         this.getTrainsByStation = getTrainsByStation;
         this.getCurrentTrains = getCurrentTrains;
+        this.getTrainMovements = getTrainMovements;
         this.orderStationsByName = orderStationsByName;
         this.orderStationsByDistance = orderStationsByDistance;
 
@@ -28,6 +29,17 @@
                 url: `${HTTP_CONSTANTS.API_URL_HOOK}/${ENDPOINTS_CONSTANTS.GET_STATION_BY_NAME}`,
                 params: {
                     StationDesc: startingStation
+                }
+            };
+            return $http(request);
+        }
+
+        function getTrainMovements(trainCode, trainDate) {
+            let request = {
+                url: `${HTTP_CONSTANTS.API_URL_HOOK}/${ENDPOINTS_CONSTANTS.GET_TRAIN_MOVEMENTS}`,
+                params: {
+                    TrainId: trainCode,
+                    TrainDate: trainDate
                 }
             };
             return $http(request);

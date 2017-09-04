@@ -91,3 +91,8 @@ table.adp-directions {
 .md-primary[disabled] {
     background-color: #ccc !important;
 }
+
+md-dialog {
+    max-width: 90%;
+    max-height: 90%;
+}

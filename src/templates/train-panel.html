@@ -13,6 +13,24 @@
     <md-dialog-content>
         <md-content class="md-padding">
             <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Train Stops">
+                    <md-content class="md-padding">
+                        <div layout="column">
+                            <md-list flex>
+                                <md-subheader ng-show="vm.trainsList.length" class="md-no-sticky">List of the train next stops:</md-subheader>
+                                <md-list-item class="md-1-line list-item-container" layout="row" ng-repeat="movement in vm.train.movements track by $index">
+                                    <div class="md-list-item-text train-item-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start stretch" flex>
+                                        <div flex-value="20" train-info-container label-title="Station:" label-value="{{movement.LocationFullName}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Scheduled Arrival:" label-value="{{movement.ScheduledArrival}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Expected Arrival:" label-value="{{movement.ExpectedArrival}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Scheduled Departure:" label-value="{{movement.ScheduledDeparture}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Expected Departure:" label-value="{{movement.ExpectedDeparture}}"></div>
+                                    </div>
+                                </md-list-item>
+                            </md-list>
+                        </div>
+                    </md-content>
+                </md-tab>
                 <md-tab label="Train Tracking">
                     <md-content class="md-padding">
                         <div>
