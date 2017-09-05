@@ -7,8 +7,7 @@
         DEFAULT_METHOD: 'GET',
         DEFAULT_RESPONSE_CONTENT: 'application/xml',
         API_URL_HOOK: 'irishrail',
-        // SERVICE_BASE_URL: 'http://localhost:9000/http://api.irishrail.ie/realtime/realtime.asmx',
-        SERVICE_BASE_URL: 'http://api.irishrail.ie/realtime/realtime.asmx'
+        SERVICE_BASE_URL: 'http://localhost:9000/http://api.irishrail.ie/realtime/realtime.asmx'
     });
     
     app.constant('ENDPOINTS_CONSTANTS', {

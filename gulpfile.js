@@ -105,7 +105,7 @@
         // get all the styles concatenating them and leaving our style file at the end, so we can override all the external rules from our styles
         let allStyles = [].concat(PATHS.EXTERNAL_STYLES, PATHS.APP_STYLES);
         let cssSources = gulp.src(allStyles, { read: false });
-        let templatesSources = gulp.src(`${PATHS.TMP_APP}/partials.js`, { read: false });
+        let templatesSources = gulp.src(`${PATHS.TMP_APP}/partials.min.js`, { read: false });
 
         return target
             .pipe(inject(templatesSources, { name: 'templates', ignorePath: 'tmp/' }))
@@ -189,7 +189,7 @@
             .pipe(htmlMinify({ removeComments: true, collapseWhitespace: true }))
             .pipe(ngHtml2Js({ moduleName: 'partials', prefix: PATHS.SRC_PREFIX }))
             .pipe(concat('partials.js'))
-            // .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
+            .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
             .pipe(gulp.dest(destinationPath));
     }
 
@@ -221,8 +221,8 @@
             return target
                 .pipe(inject(gulp.src('dist/node-components.js', { read: false }), { name: 'node', ignorePath: 'dist/', addRootSlash: false }))
                 .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), { ignorePath: 'dist/', addRootSlash: false }))
-                .pipe(inject(gulp.src('dist/partials.js', { read: false }), { name: 'templates', ignorePath: 'dist/', addRootSlash: false }))
-                .pipe(inject(gulp.src('dist/all.js', { read: false }), { name: 'all', ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), { name: 'templates', ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/all.min.js', { read: false }), { name: 'all', ignorePath: 'dist/', addRootSlash: false }))
                 .pipe(gulp.dest(PATHS.DIST_APP));
 
         }
@@ -231,7 +231,7 @@
     function buildJSSourceFiles() {
         return gulp.src(PATHS.SOURCE_JS_FILES)
             .pipe(concat('all.js'))
-            // .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
+            .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
             .pipe(gulp.dest(PATHS.DIST_APP));
     }
 
