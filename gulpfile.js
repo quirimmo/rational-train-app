@@ -79,6 +79,7 @@
     gulp.task('serve-no-watch', ['clean-tmp'], serveNoWatch);
     gulp.task('serve-dist', ['start-mirror-proxy'], serveDist);
     gulp.task('unit-test', unitTest);
+    gulp.task('unit-test-travis', ['compile-templates'], unitTest);
     gulp.task('unit-test-watch', unitTestWatch);
     gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
     gulp.task('publish', ['clean-dist'], publish);
