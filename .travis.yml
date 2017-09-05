@@ -12,6 +12,7 @@ language: node_js
 node_js:
   - '6.11'
 
+
 # Should skip the install phase
 # install: true
 
