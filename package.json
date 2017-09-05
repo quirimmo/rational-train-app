@@ -12,19 +12,24 @@
     "angular-animate": "^1.6.6",
     "angular-aria": "^1.6.6",
     "angular-material": "^1.1.4",
+    "angular-messages": "^1.6.6",
     "angular-ui-router": "^1.0.3",
     "cors-anywhere": "^0.4.0",
-    "jquery": "^3.2.1"
+    "jquery": "^3.2.1",
+    "ngmap": "^1.18.4"
   },
   "devDependencies": {
     "angular-mocks": "^1.6.6",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^3.8.0",
     "gulp-cli": "^1.4.0",
     "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^3.0.0",
     "gulp-inject": "^4.2.0",
     "gulp-live-server": "0.0.31",
     "gulp-minify": "^1.0.0",
+    "gulp-ng-html2js": "^0.2.2",
     "gulp-protractor": "^4.1.0",
     "husky": "^0.14.3",
     "jasmine": "^2.8.0",
@@ -32,7 +37,10 @@
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",
-    "protractor": "^5.1.2"
+    "karma-ng-html2js-preprocessor": "^1.0.0",
+    "ng-html2js": "^3.0.0",
+    "protractor": "^5.1.2",
+    "run-sequence": "^2.1.0"
   },
   "author": "Quirino Lo Russo",
   "license": "MIT",

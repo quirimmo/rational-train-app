@@ -1,0 +1,17 @@
+<md-list-item class="md-1-line list-item-container" layout="row">
+    <div class="md-list-item-text train-item-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start stretch" flex>
+        <div flex-value="10" train-info-container label-title="From:" label-value="{{vm.train.Origin}} {{vm.train.Origintime}}"></div>
+        <div flex-value="10" train-info-container label-title="To:" label-value="{{vm.train.Destination}} {{vm.train.Destinationtime}}"></div>
+        <div flex-value="15" train-info-container label-title="Status:" label-value="{{vm.train.Status}}"></div>
+        <div flex-value="10" train-info-container label-title="Last Update:" label-value="{{vm.train.Lastlocation || 'Unknown'}}"></div>
+        <div flex-value="10" train-info-container label-title="Arriving:" label-value="{{vm.train.Duein}} min"></div>
+        <div flex-value="10" train-info-container label-title="Late:" label-value="{{vm.train.Late}} min"></div>
+        <div flex-value="10" train-info-container label-title="Arrival:" label-value="{{vm.train.Exparrival}}"></div>
+        <div flex-value="10" train-info-container label-title="Departure:" label-value="{{vm.train.Expdepart}}"></div>
+        <div flex-value="10" train-info-container label-title="Direction:" label-value="{{vm.train.Direction}}"></div>
+        <div flex-value="10" train-info-container label-title="Type:" label-value="{{vm.train.Traintype}}"></div>
+        <div layout="column" flex="10" layout-sm="column" layout-xs="column" flex-sm="100" flex-xs="100" layout-align-sm="center stretch" layout-align-xs="center stretch">
+            <md-button class="md-raised md-primary" ng-click="vm.openTrainPanel($event)">Open Details</md-button>
+        </div>
+    </div>
+</md-list-item>

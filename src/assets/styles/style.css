@@ -1,0 +1,98 @@
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+.md-button {
+    background-color: #40C4FF !important;
+    color: #444;
+    white-space: normal;
+}
+
+.md-button:hover {
+    background-color: #8BDAFD !important;
+}
+
+.png-icon {
+    margin: 0 auto;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+}
+
+.list-item-container {
+    border-bottom: 2px solid #ccc;
+    background: #eee;
+    padding: 20px 16px !important;
+    margin-bottom: 20px;
+}
+
+.train-item-container {
+    margin: 0 auto;
+}
+
+.train-item-container div {
+    width: 100%;
+    text-align: left;
+}
+
+.train-item-container div label:first-child {
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.train-details-dialog {
+    width: 100%;
+}
+
+.close-dialog-img {
+    background: white;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.adp-warnbox {
+    display: none;
+}
+
+table.adp-directions {
+    width: 100%;
+}
+
+.ajax-loader {
+    background: #000;
+    color: white;
+    opacity: 0.8;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 99999;
+    text-align: center;
+}
+
+.distance-info h4 span {
+    color: red;
+}
+
+.distance-info h4 span.in-time-for-the-train {
+    color: green;
+}
+
+.md-primary[disabled] {
+    background-color: #ccc !important;
+}
+
+md-dialog {
+    max-width: 90%;
+    max-height: 90%;
+}

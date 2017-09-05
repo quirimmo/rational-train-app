@@ -1,0 +1,79 @@
+<md-dialog aria-label="Train Details" class="train-details-dialog">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Train Details</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="vm.closePanel()">
+                <img class="close-dialog-img" src="src/assets/images/close_panel.png" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <md-content class="md-padding">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Train Stops">
+                    <md-content class="md-padding">
+                        <div layout="column">
+                            <md-list flex>
+                                <md-subheader ng-show="vm.train.movements.length" class="md-no-sticky">List of the next stops:</md-subheader>
+                                <md-list-item class="md-1-line list-item-container" layout="row" ng-repeat="movement in vm.train.movements track by $index">
+                                    <div class="md-list-item-text train-item-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start stretch" flex>
+                                        <div flex-value="20" train-info-container label-title="Station:" label-value="{{movement.LocationFullName}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Sch Arrival:" label-value="{{movement.ScheduledArrival}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Exp Arrival:" label-value="{{movement.ExpectedArrival}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Sch Depart:" label-value="{{movement.ScheduledDeparture}}"></div>
+                                        <div flex-value="20" train-info-container label-title="Exp Depart:" label-value="{{movement.ExpectedDeparture}}"></div>
+                                    </div>
+                                </md-list-item>
+                            </md-list>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Train Tracking">
+                    <md-content class="md-padding">
+                        <div>
+                            <ng-map ng-if="vm.isTrainPositionDefined()" center="{{vm.getTrainPosition()}}" zoom="16">
+                                <marker position="{{vm.getTrainPosition()}}">
+                                </marker>
+                            </ng-map>
+                            <div ng-if="!vm.isTrainPositionDefined()">
+                                Unfortunately there are not tracking information associated to the current train
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Distance From Train" class="distance-tab">
+                    <md-content class="md-padding">
+                        <div layou="column">
+                            <div class="distance-info">
+                                <h4>
+                                    The distance from the train station is <span>{{vm.distanceToTheStation}}</span> and you should take around <span>{{vm.timeToTheStation}}</span>
+                                </h4>
+                                <h4>
+                                    The train should arrive at the current station in around <span>{{vm.train.Duein}} mins</span> at <span>{{vm.train.Exparrival}}</span> and it should leave at <span>{{vm.train.Expdepart}}</span>
+                                </h4>
+                                <h4 ng-show="vm.isLate()">
+                                    <span>Unfortunately it seems you are late and the train will leave before you arrive :(</span>
+                                </h4>
+                                <h4 ng-hide="vm.isLate()">
+                                    <span class="in-time-for-the-train">You should be able to get the train :)</span>
+                                </h4>
+                            </div>
+                            <div>
+                                <ng-map id="directions-map" center="{{vm.getCurrentPosition()}}" zoom="16">
+                                    <directions draggable="true" panel="directions-panel" travel-mode="WALKING" origin="{{vm.getCurrentPosition()}}" destination="{{vm.getStationPosition()}}">
+                                    </directions>
+                                </ng-map>
+                            </div>
+                            <div id="directions-panel">
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </md-dialog-content>
+
+</md-dialog>

@@ -1,11 +1,12 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').service('xmlJSONParserService', xmlJSONParserService);
+    var app = angular.module('myApp');
+    
+    app.service('xmlJSONParserService', xmlJSONParserService);
 
-    xmlJSONParserService.$inject = ['$window'];
-
-    function xmlJSONParserService($window) {
+    function xmlJSONParserService() {
+        // using the xml2json.js library for easily parsing the XML and get back the JSON object
         this.x2js = new X2JS();
         this.parseXmlToJson = parseXmlToJson;
 
