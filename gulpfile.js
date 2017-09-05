@@ -57,7 +57,6 @@
             'src/*/*.js',
             'src/config.js'
         ],
-        PARTIALS: 'partials.min.js',
         PARTIALS_HTML_SOURCES: [
             'src/**/*.html',
             '!src/index.html'
@@ -106,7 +105,7 @@
         // get all the styles concatenating them and leaving our style file at the end, so we can override all the external rules from our styles
         let allStyles = [].concat(PATHS.EXTERNAL_STYLES, PATHS.APP_STYLES);
         let cssSources = gulp.src(allStyles, { read: false });
-        let templatesSources = gulp.src(`${PATHS.TMP_APP}/${PATHS.PARTIALS}`, { read: false });
+        let templatesSources = gulp.src(`${PATHS.TMP_APP}/partials.js`, { read: false });
 
         return target
             .pipe(inject(templatesSources, { name: 'templates', ignorePath: 'tmp/' }))
