@@ -45,6 +45,12 @@
                                 }
                             }
                         }
+
+                        function onError(err) {
+                            // stop the loading and throw the error
+                            $rootScope.$broadcast('stop-loading', {});
+                            throw new Error(err);
+                        }
                     }]
                 }
             };
@@ -52,11 +58,7 @@
             $stateProvider.state(mainState);
             $urlRouterProvider.otherwise('main');
 
-            function onError(err) {
-                // stop the loading and throw the error
-                $rootScope.$broadcast('stop-loading', {});
-                throw new Error(err);
-            }
+            
         }
     ]);
 
