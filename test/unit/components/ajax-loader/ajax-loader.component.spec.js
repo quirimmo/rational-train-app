@@ -3,6 +3,8 @@ describe('ajaxLoader', function() {
     let controller, $rootScope;
 
     beforeEach(module('myApp'));
+    beforeEach(module('templates'));
+
     beforeEach(inject(function(_$componentController_, _$rootScope_) {
         let $componentController = _$componentController_;
         $rootScope = _$rootScope_;
