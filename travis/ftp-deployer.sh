@@ -12,5 +12,5 @@ ftp_transfer () {
 # then ftp app to the server
 if [ $(is_master_PR) = true ]; then
 	ftp_prod_address=$BITWEED_FTP_DOMAIN
-	ftp_transfer $FTP_PASSWORD $FTP_USER $ftp_prod_address
+	ftp_transfer $FTP_USER $FTP_PASSWORD $ftp_prod_address
 fi
