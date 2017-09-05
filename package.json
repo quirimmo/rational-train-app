@@ -22,6 +22,7 @@
     "angular-mocks": "^1.6.6",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^3.8.0",
     "gulp-cli": "^1.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^3.0.0",

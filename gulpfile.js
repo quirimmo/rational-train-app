@@ -18,6 +18,7 @@
     const ngHtml2Js = require("gulp-ng-html2js");
     const clean = require('gulp-clean');
     const runSequence = require('run-sequence');
+    const cleanCSS = require('gulp-clean-css');
 
 
     // List of all the static paths 
@@ -60,7 +61,13 @@
         PARTIALS_HTML_SOURCES: [
             'src/**/*.html',
             '!src/index.html'
-        ]
+        ],
+        VENDORS_FILES: 'vendors/*.js',
+        VENDORS_PREFIX: 'vendors/',
+        ALL_IMAGES: [
+            './src/assets/images/*.*'
+        ],
+        IMAGES_PATH: 'src/assets/images'
     };
 
 
@@ -70,14 +77,21 @@
     gulp.task('inject-dependencies', injectDependencies);
     gulp.task('serve', ['clean-tmp'], serve);
     gulp.task('serve-no-watch', ['clean-tmp'], serveNoWatch);
+    gulp.task('serve-dist', ['start-mirror-proxy'], serveDist);
     gulp.task('unit-test', unitTest);
     gulp.task('unit-test-watch', unitTestWatch);
     gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
-    gulp.task('publish', publishApp);
+    gulp.task('publish', ['clean-dist'], publish);
+    gulp.task('build-js-source-files', buildJSSourceFiles);
     gulp.task('start-mirror-proxy', startMirrorProxy);
     gulp.task('compile-templates', compileTemplates.bind(null, PATHS.TMP_APP));
+    gulp.task('compile-templates-dist', compileTemplates.bind(null, PATHS.DIST_APP));
     gulp.task('clean-tmp', cleanFolder.bind(null, PATHS.TMP_APP));
     gulp.task('clean-dist', cleanFolder.bind(null, PATHS.DIST_APP));
+    gulp.task('copy-vendors', copyVendors);
+    gulp.task('publish-node-modules', publishNodeModules);
+    gulp.task('publish-styles', publishStyles);
+    gulp.task('publish-images', publishImages);
     // set the default task as serve so with the gulp command it will execute directly the serve
     gulp.task('default', ['serve']);
 
@@ -184,115 +198,68 @@
             .pipe(clean());
     }
 
-
-
-
-
-    function publishApp() {
-        return gulp.src(PATHS.SOURCE_JS_FILES)
-            .pipe(concat('all.js'))
-            .pipe(minify({
-                ext: {
-                    min: '.min.js'
-                }
-            }))
-            .pipe(gulp.dest(PATHS.DIST_APP));
+    function serveDist() {
+        let server = gls.static(PATHS.DIST_APP, 8000);
+        server.start();
     }
 
 
-    gulp.task('publish-node-modules', function() {
+    function publish(done) {
+        runSequence(
+            'compile-templates-dist', [
+                'build-js-source-files',
+                'copy-vendors',
+                'publish-node-modules',
+                'publish-styles',
+                'publish-images'
+            ], afterSequence);
+
+        function afterSequence() {
+            // after getting everything ready, inject every thing needed inside the mail
+            let target = gulp.src('src/index.html');
+
+            return target
+                .pipe(inject(gulp.src('dist/node-components.js', { read: false }), { name: 'node', ignorePath: 'dist/' }))
+                .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), { ignorePath: 'dist/' }))
+                .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), { name: 'templates', ignorePath: 'dist/' }))
+                .pipe(inject(gulp.src('dist/all.min.js', { read: false }), { name: 'all', ignorePath: 'dist/' }))
+                .pipe(gulp.dest(PATHS.DIST_APP));
+
+        }
+    }
+
+    function buildJSSourceFiles() {
+        return gulp.src(PATHS.SOURCE_JS_FILES)
+            .pipe(concat('all.js'))
+            .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
+            .pipe(gulp.dest(PATHS.DIST_APP));
+    }
+
+    function copyVendors() {
+        return gulp.src(PATHS.VENDORS_FILES)
+            .pipe(gulp.dest(`${PATHS.DIST_APP}/${PATHS.VENDORS_PREFIX}`));
+    }
+
+    function publishNodeModules() {
         return gulp.src(PATHS.NODE_MODULES_COMPONENTS)
             .pipe(concat('node-components.js'))
             .pipe(gulp.dest(PATHS.DIST_APP));
-    });
+    }
 
-
-    gulp.task('compile-templates-dist', ['clean-dist'], function() {
-        // return gulp.src(sourceFolderPath)
-        // .pipe(variables.minifyHtml({
-        //     empty: true,
-        //     spare: true,
-        //     quotes: true,               
-        //     loose: true
-        // }))
-        // .pipe(variables.ngHtml2Js({
-        //     moduleName: 'templates'
-        // }))
-        // .pipe(variables.concat('templates.js'))
-        // .pipe(variables.uglify())
-        // .pipe(variables.gulp.dest(destinationFolderPath));
-        return gulp.src(['src/**/*.html', '!src/index.html'])
-            .pipe(htmlMinify({
-                removeComments: true,
-                collapseWhitespace: true
-            }))
-            .pipe(ngHtml2Js({
-                moduleName: "partials",
-                prefix: "src/"
-            }))
-            .pipe(concat("partials.js"))
-            .pipe(minify({
-                ext: {
-                    min: '.min.js'
-                }
-            }))
-            .pipe(gulp.dest(PATHS.DIST_APP));
-    });
-
-    gulp.task('copy-vendors', function() {
-        return gulp.src('vendors/xml2json.js')
-            .pipe(gulp.dest(PATHS.DIST_APP + '/vendors/'));
-    });
-
-    gulp.task('publish-styles', function() {
-        let stylesSource = gulp.src([
-            './node_modules/angular-material/angular-material.min.css',
-            './src/assets/styles/*.css'
-        ]);
+    function publishStyles() {
+        let stylesSource = gulp.src(PATHS.EXTERNAL_STYLES.concat(PATHS.APP_STYLES));
 
         return stylesSource
             .pipe(concat("global-styles.css"))
+            .pipe(cleanCSS())
             .pipe(gulp.dest(PATHS.DIST_APP));
-    });
+    }
 
-    gulp.task('publish-images', function() {
-        let imagesSource = gulp.src([
-            './src/assets/images/*.*'
-        ]);
+    function publishImages() {
+        let imagesSource = gulp.src(PATHS.ALL_IMAGES);
 
         return imagesSource
-            .pipe(gulp.dest(PATHS.DIST_APP + '/src/assets/images'));
-    });
-
-    gulp.task('inject-build-dependencies', ['compile-templates-dist', 'publish', 'publish-node-modules', 'copy-vendors', 'publish-styles', 'publish-images'], function() {
-        // inject node dependencies
-        // inject partials
-        // inject all source files
-
-        let target = gulp.src('src/index.html');
-
-        return target
-            .pipe(inject(gulp.src('dist/node-components.js', { read: false }), {
-                name: 'node',
-                ignorePath: 'dist/'
-            }))
-            .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), {
-                ignorePath: 'dist/'
-            }))
-            .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), {
-                name: 'templates',
-                ignorePath: 'dist/'
-            }))
-            .pipe(inject(gulp.src('dist/all.min.js', { read: false }), {
-                name: 'all',
-                ignorePath: 'dist/'
-            }))
-            .pipe(gulp.dest(PATHS.DIST_APP));
-    });
-
-    gulp.task('serve-dist', ['start-mirror-proxy'], function() {
-        let server = gls.static(PATHS.DIST_APP, 8000);
-        server.start();
-    });
+            .pipe(gulp.dest(`${PATHS.DIST_APP}/${PATHS.IMAGES_PATH}`));
+    }
 
 })();
