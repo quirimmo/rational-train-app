@@ -5,7 +5,7 @@ set -ev
 
 ftp_transfer () {
 	cd dist
-	find . -type f -exec curl --retry 3 --ftp-create-dirs  -u $3:$2 -T {} ftp://$1/{}  \;
+	find . -type f -exec curl --retry 3 --ftp-create-dirs  -u $1:$2 -T {} ftp://$3/{}  \;
 }
 
 # if destination branch of the PR is master
