@@ -28,7 +28,7 @@ module.exports = function(config) {
             './vendors/xml2json.js',
             'http://maps.google.com/maps/api/js',
             
-            './tmp/partials.min.js',
+            './tmp/partials.js',
 
             './src/app.js',
             './src/services/**/*.js',
