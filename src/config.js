@@ -54,11 +54,8 @@
                     }]
                 }
             };
-
             $stateProvider.state(mainState);
-            $urlRouterProvider.otherwise('main');
-
-            
+            $urlRouterProvider.otherwise('main');            
         }
     ]);
 
