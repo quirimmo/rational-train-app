@@ -17,6 +17,7 @@
     const htmlMinify = require('gulp-htmlmin');
     const ngHtml2Js = require("gulp-ng-html2js");
     const clean = require('gulp-clean');
+    const runSequence = require('run-sequence');
 
 
     // List of all the static paths 
@@ -42,6 +43,7 @@
         ],
         TMP_APP: './tmp',
         DIST_APP: './dist',
+        SRC_PREFIX: 'src/',
         ROOT_APP: '/',
         KARMA_CONFIG_FILE: `${__dirname}/karma.conf.js`,
         PROTRACTOR_CONFIG_FILE: './protractor.conf.js',
@@ -53,6 +55,11 @@
             'src/directives/**/*.js',
             'src/*/*.js',
             'src/config.js'
+        ],
+        PARTIALS: 'partials.min.js',
+        PARTIALS_HTML_SOURCES: [
+            'src/**/*.html',
+            '!src/index.html'
         ]
     };
 
@@ -61,14 +68,18 @@
     // ============================================================
 
     gulp.task('inject-dependencies', injectDependencies);
-    gulp.task('serve', ['inject-dependencies', 'start-mirror-proxy'], serve);
-    gulp.task('serve-no-watch', ['inject-dependencies', 'start-mirror-proxy'], serveNoWatch);
+    gulp.task('serve', ['clean-tmp'], serve);
+    gulp.task('serve-no-watch', ['clean-tmp'], serveNoWatch);
     gulp.task('unit-test', unitTest);
     gulp.task('unit-test-watch', unitTestWatch);
     gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
     gulp.task('publish', publishApp);
     gulp.task('start-mirror-proxy', startMirrorProxy);
-
+    gulp.task('compile-templates', compileTemplates.bind(null, PATHS.TMP_APP));
+    gulp.task('clean-tmp', cleanFolder.bind(null, PATHS.TMP_APP));
+    gulp.task('clean-dist', cleanFolder.bind(null, PATHS.DIST_APP));
+    // set the default task as serve so with the gulp command it will execute directly the serve
+    gulp.task('default', ['serve']);
 
     // Private functions
     // ============================================================
@@ -80,27 +91,47 @@
         // get all the styles concatenating them and leaving our style file at the end, so we can override all the external rules from our styles
         let allStyles = [].concat(PATHS.EXTERNAL_STYLES, PATHS.APP_STYLES);
         let cssSources = gulp.src(allStyles, { read: false });
+        let templatesSources = gulp.src(`${PATHS.TMP_APP}/${PATHS.PARTIALS}`, { read: false });
 
         return target
+            .pipe(inject(templatesSources, { name: 'templates', ignorePath: 'tmp/' }))
             .pipe(inject(cssSources))
             .pipe(inject(nodeSources, { name: 'node' }))
             .pipe(inject(angularSources, { name: 'angular' }))
             .pipe(gulp.dest(PATHS.TMP_APP));
     }
 
-    function serve() {
-        let server = gls.static([PATHS.ROOT_APP, PATHS.TMP_APP]);
-        server.start();
-        gulp.watch(PATHS.SOURCE_FILES, function(file) {
-            server.notify.apply(server, [file]);
-        });
+    function serve(done) {
+        runSequence(
+            'compile-templates', [
+                'inject-dependencies',
+                'start-mirror-proxy',
+            ], afterSequence);
+
+        function afterSequence() {
+            let server = gls.static([PATHS.ROOT_APP, PATHS.TMP_APP]);
+            server.start();
+            gulp.watch(PATHS.SOURCE_FILES, function(file) {
+                server.notify.apply(server, [file]);
+            });
+            done();
+        }
     }
 
     let serverNoWatch;
 
-    function serveNoWatch() {
-        serverNoWatch = gls.static([PATHS.ROOT_APP, PATHS.TMP_APP]);
-        serverNoWatch.start();
+    function serveNoWatch(done) {
+        runSequence(
+            'compile-templates', [
+                'inject-dependencies',
+                'start-mirror-proxy',
+            ], afterSequence);
+
+        function afterSequence() {
+            serverNoWatch = gls.static([PATHS.ROOT_APP, PATHS.TMP_APP]);
+            serverNoWatch.start();
+            done();
+        }
     }
 
     function unitTest(done) {
@@ -139,9 +170,19 @@
         spawn('node', ['proxy.js'], { shell: true, detached: true });
     }
 
+    function compileTemplates(destinationPath) {
+        return gulp.src(PATHS.PARTIALS_HTML_SOURCES)
+            .pipe(htmlMinify({ removeComments: true, collapseWhitespace: true }))
+            .pipe(ngHtml2Js({ moduleName: 'partials', prefix: PATHS.SRC_PREFIX }))
+            .pipe(concat('partials.js'))
+            .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
+            .pipe(gulp.dest(destinationPath));
+    }
 
-
-
+    function cleanFolder(folderToClean) {
+        return gulp.src(folderToClean, { read: false })
+            .pipe(clean());
+    }
 
 
 
@@ -161,12 +202,12 @@
 
     gulp.task('publish-node-modules', function() {
         return gulp.src(PATHS.NODE_MODULES_COMPONENTS)
-        .pipe(concat('node-components.js'))
-        .pipe(gulp.dest(PATHS.DIST_APP));
+            .pipe(concat('node-components.js'))
+            .pipe(gulp.dest(PATHS.DIST_APP));
     });
 
 
-    gulp.task('test-build', ['clean-dist'], function() {
+    gulp.task('compile-templates-dist', ['clean-dist'], function() {
         // return gulp.src(sourceFolderPath)
         // .pipe(variables.minifyHtml({
         //     empty: true,
@@ -186,7 +227,8 @@
                 collapseWhitespace: true
             }))
             .pipe(ngHtml2Js({
-                moduleName: "partials"
+                moduleName: "partials",
+                prefix: "src/"
             }))
             .pipe(concat("partials.js"))
             .pipe(minify({
@@ -197,17 +239,32 @@
             .pipe(gulp.dest(PATHS.DIST_APP));
     });
 
-    gulp.task('clean-dist', function() {
-        return gulp.src('dist', { read: false })
-            .pipe(clean());
-    });
-
     gulp.task('copy-vendors', function() {
         return gulp.src('vendors/xml2json.js')
             .pipe(gulp.dest(PATHS.DIST_APP + '/vendors/'));
     });
 
-    gulp.task('inject-build-dependencies', ['publish', 'publish-node-modules', 'copy-vendors'], function() {
+    gulp.task('publish-styles', function() {
+        let stylesSource = gulp.src([
+            './node_modules/angular-material/angular-material.min.css',
+            './src/assets/styles/*.css'
+        ]);
+
+        return stylesSource
+            .pipe(concat("global-styles.css"))
+            .pipe(gulp.dest(PATHS.DIST_APP));
+    });
+
+    gulp.task('publish-images', function() {
+        let imagesSource = gulp.src([
+            './src/assets/images/*.*'
+        ]);
+
+        return imagesSource
+            .pipe(gulp.dest(PATHS.DIST_APP + '/src/assets/images'));
+    });
+
+    gulp.task('inject-build-dependencies', ['compile-templates-dist', 'publish', 'publish-node-modules', 'copy-vendors', 'publish-styles', 'publish-images'], function() {
         // inject node dependencies
         // inject partials
         // inject all source files
@@ -217,6 +274,9 @@
         return target
             .pipe(inject(gulp.src('dist/node-components.js', { read: false }), {
                 name: 'node',
+                ignorePath: 'dist/'
+            }))
+            .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), {
                 ignorePath: 'dist/'
             }))
             .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), {
@@ -231,7 +291,7 @@
     });
 
     gulp.task('serve-dist', ['start-mirror-proxy'], function() {
-        let server = gls.static([PATHS.ROOT_APP, PATHS.DIST_APP]);
+        let server = gls.static(PATHS.DIST_APP, 8000);
         server.start();
     });
 
