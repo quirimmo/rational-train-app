@@ -26,14 +26,14 @@
 
     const PATHS = {
         NODE_MODULES_COMPONENTS: [
-            './node_modules/jquery/dist/jquery.min.js',
-            './node_modules/angular/angular.min.js',
-            './node_modules/angular-messages/angular-messages.min.js',
-            './node_modules/angular-aria/angular-aria.min.js',
-            './node_modules/angular-animate/angular-animate.min.js',
-            './node_modules/angular-material/angular-material.min.js',
-            './node_modules/angular-ui-router/release/angular-ui-router.min.js',
-            './node_modules/ngmap/build/scripts/ng-map.min.js'
+            './node_modules/jquery/dist/jquery.js',
+            './node_modules/angular/angular.js',
+            './node_modules/angular-messages/angular-messages.js',
+            './node_modules/angular-aria/angular-aria.js',
+            './node_modules/angular-animate/angular-animate.js',
+            './node_modules/angular-material/angular-material.js',
+            './node_modules/angular-ui-router/release/angular-ui-router.js',
+            './node_modules/ngmap/build/scripts/ng-map.js'
         ],
         MAIN_INDEX: './src/index.html',
         SOURCE_FILES: './src/**/*.*',
@@ -190,7 +190,7 @@
             .pipe(htmlMinify({ removeComments: true, collapseWhitespace: true }))
             .pipe(ngHtml2Js({ moduleName: 'partials', prefix: PATHS.SRC_PREFIX }))
             .pipe(concat('partials.js'))
-            .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
+            // .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
             .pipe(gulp.dest(destinationPath));
     }
 
@@ -222,8 +222,8 @@
             return target
                 .pipe(inject(gulp.src('dist/node-components.js', { read: false }), { name: 'node', ignorePath: 'dist/', addRootSlash: false }))
                 .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), { ignorePath: 'dist/', addRootSlash: false }))
-                .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), { name: 'templates', ignorePath: 'dist/', addRootSlash: false }))
-                .pipe(inject(gulp.src('dist/all.min.js', { read: false }), { name: 'all', ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/partials.js', { read: false }), { name: 'templates', ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/all.js', { read: false }), { name: 'all', ignorePath: 'dist/', addRootSlash: false }))
                 .pipe(gulp.dest(PATHS.DIST_APP));
 
         }
@@ -232,7 +232,7 @@
     function buildJSSourceFiles() {
         return gulp.src(PATHS.SOURCE_JS_FILES)
             .pipe(concat('all.js'))
-            .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
+            // .pipe(minify({ ext: { min: '.min.js' }, noSource: true }))
             .pipe(gulp.dest(PATHS.DIST_APP));
     }
 
