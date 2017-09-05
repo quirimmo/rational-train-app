@@ -7,13 +7,14 @@
     // Replace the hook with the right url 
     // Add the mirror service used for bypassing CORS requests
 
-    angular.module('myApp').factory('IrishRailInterceptorFactory', IrishRailInterceptorFactory)
-        .config(function($httpProvider) {
-            // register the new interceptor in AngularJS
-            $httpProvider.interceptors.push('IrishRailInterceptorFactory');
-        });
+    var app = angular.module('myApp');
 
-    IrishRailInterceptorFactory.$inject = ['xmlJSONParserService', 'HTTP_CONSTANTS'];
+    app.factory('IrishRailInterceptorFactory', ['xmlJSONParserService', 'HTTP_CONSTANTS', IrishRailInterceptorFactory]);
+
+    app.config(['$httpProvider', function($httpProvider) {
+        // register the new interceptor in AngularJS
+        $httpProvider.interceptors.push('IrishRailInterceptorFactory');
+    }]);
 
     function IrishRailInterceptorFactory(xmlJSONParserService, HTTP_CONSTANTS) {
 

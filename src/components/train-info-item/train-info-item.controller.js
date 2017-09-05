@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').controller('TrainInfoItemController', TrainInfoItemController);
-
-    TrainInfoItemController.$inject = ['$mdDialog', 'trainService', 'NavigatorGeolocation', '$rootScope'];
+    var app = angular.module('myApp');
+    
+    app.controller('TrainInfoItemController', ['$mdDialog', 'trainService', 'NavigatorGeolocation', '$rootScope', TrainInfoItemController]);
 
     function TrainInfoItemController($mdDialog, trainService, NavigatorGeolocation, $rootScope) {
 

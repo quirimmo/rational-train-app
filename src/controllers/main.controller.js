@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').controller('MainController', MainController);
-
-    MainController.$inject = ['allStations', 'trainService', '$rootScope', '$q'];
+    var app = angular.module('myApp');
+    
+    app.controller('MainController', ['allStations', 'trainService', '$rootScope', '$q', MainController]);
 
     function MainController(allStations, trainService, $rootScope, $q) {
 

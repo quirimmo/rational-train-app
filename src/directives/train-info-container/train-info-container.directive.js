@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').directive('trainInfoContainer', TrainInfoContainer);
-
-    TrainInfoContainer.$inject = [];
+    var app = angular.module('myApp'); 
+    
+    app.directive('trainInfoContainer', TrainInfoContainer);
 
     function TrainInfoContainer() {
         var directive = {

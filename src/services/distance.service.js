@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').service('distanceService', distanceService);
-
-    distanceService.$inject = ['$q'];
+    var app = angular.module('myApp');
+    
+    app.service('distanceService', ['$q', distanceService]);
 
     function distanceService($q) {
 

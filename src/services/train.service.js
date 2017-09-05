@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').service('trainService', trainService);
-
-    trainService.$inject = ['$http', 'ENDPOINTS_CONSTANTS', 'distanceService', '$q', 'HTTP_CONSTANTS'];
+    var app = angular.module('myApp');
+    
+    app.service('trainService', ['$http', 'ENDPOINTS_CONSTANTS', 'distanceService', '$q', 'HTTP_CONSTANTS', trainService]);
 
     function trainService($http, ENDPOINTS_CONSTANTS, distanceService, $q, HTTP_CONSTANTS) {
 

@@ -14,6 +14,9 @@
     const concat = require('gulp-concat');
     const minify = require('gulp-minify');
     const spawn = require('child_process').spawn;
+    const htmlMinify = require('gulp-htmlmin');
+    const ngHtml2Js = require("gulp-ng-html2js");
+    const clean = require('gulp-clean');
 
 
     // List of all the static paths 
@@ -38,7 +41,7 @@
             './node_modules/angular-material/angular-material.min.css'
         ],
         TMP_APP: './tmp',
-        DIST_APP: './tmp',
+        DIST_APP: './dist',
         ROOT_APP: '/',
         KARMA_CONFIG_FILE: `${__dirname}/karma.conf.js`,
         PROTRACTOR_CONFIG_FILE: './protractor.conf.js',
@@ -132,8 +135,20 @@
             .on('error', function(e) { throw e; });
     }
 
+    function startMirrorProxy() {
+        spawn('node', ['proxy.js'], { shell: true, detached: true });
+    }
+
+
+
+
+
+
+
+
+
     function publishApp() {
-        return gulp.src(PATHS.NODE_MODULES_COMPONENTS.concat(PATHS.SOURCE_JS_FILES))
+        return gulp.src(PATHS.SOURCE_JS_FILES)
             .pipe(concat('all.js'))
             .pipe(minify({
                 ext: {
@@ -143,8 +158,81 @@
             .pipe(gulp.dest(PATHS.DIST_APP));
     }
 
-    function startMirrorProxy() {
-        spawn('node', ['proxy.js'], { shell: true , detached: true });
-    }
+
+    gulp.task('publish-node-modules', function() {
+        return gulp.src(PATHS.NODE_MODULES_COMPONENTS)
+        .pipe(concat('node-components.js'))
+        .pipe(gulp.dest(PATHS.DIST_APP));
+    });
+
+
+    gulp.task('test-build', ['clean-dist'], function() {
+        // return gulp.src(sourceFolderPath)
+        // .pipe(variables.minifyHtml({
+        //     empty: true,
+        //     spare: true,
+        //     quotes: true,               
+        //     loose: true
+        // }))
+        // .pipe(variables.ngHtml2Js({
+        //     moduleName: 'templates'
+        // }))
+        // .pipe(variables.concat('templates.js'))
+        // .pipe(variables.uglify())
+        // .pipe(variables.gulp.dest(destinationFolderPath));
+        return gulp.src(['src/**/*.html', '!src/index.html'])
+            .pipe(htmlMinify({
+                removeComments: true,
+                collapseWhitespace: true
+            }))
+            .pipe(ngHtml2Js({
+                moduleName: "partials"
+            }))
+            .pipe(concat("partials.js"))
+            .pipe(minify({
+                ext: {
+                    min: '.min.js'
+                }
+            }))
+            .pipe(gulp.dest(PATHS.DIST_APP));
+    });
+
+    gulp.task('clean-dist', function() {
+        return gulp.src('dist', { read: false })
+            .pipe(clean());
+    });
+
+    gulp.task('copy-vendors', function() {
+        return gulp.src('vendors/xml2json.js')
+            .pipe(gulp.dest(PATHS.DIST_APP + '/vendors/'));
+    });
+
+    gulp.task('inject-build-dependencies', ['publish', 'publish-node-modules', 'copy-vendors'], function() {
+        // inject node dependencies
+        // inject partials
+        // inject all source files
+
+        let target = gulp.src('src/index.html');
+
+        return target
+            .pipe(inject(gulp.src('dist/node-components.js', { read: false }), {
+                name: 'node',
+                ignorePath: 'dist/'
+            }))
+            .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), {
+                name: 'templates',
+                ignorePath: 'dist/'
+            }))
+            .pipe(inject(gulp.src('dist/all.min.js', { read: false }), {
+                name: 'all',
+                ignorePath: 'dist/'
+            }))
+            .pipe(gulp.dest(PATHS.DIST_APP));
+    });
+
+    gulp.task('serve-dist', ['start-mirror-proxy'], function() {
+        let server = gls.static([PATHS.ROOT_APP, PATHS.DIST_APP]);
+        server.start();
+    });
 
 })();

@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').controller('TrainPanelController', TrainPanelController);
-
-    TrainPanelController.$inject = ['$interval', '$mdDialog', 'train', 'trainPosition', 'currentPosition', 'startingStation', 'trainService', 'NavigatorGeolocation', 'NgMap', 'distanceService'];
+    var app = angular.module('myApp');
+    
+    app.controller('TrainPanelController', ['$interval', '$mdDialog', 'train', 'trainPosition', 'currentPosition', 'startingStation', 'trainService', 'NavigatorGeolocation', 'NgMap', 'distanceService', TrainPanelController]);
 
     function TrainPanelController($interval, $mdDialog, train, trainPosition, currentPosition, startingStation, trainService, NavigatorGeolocation, NgMap, distanceService) {
         var vm = this;

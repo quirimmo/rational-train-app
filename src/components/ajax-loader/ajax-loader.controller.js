@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('myApp').controller('AjaxLoaderController', AjaxLoaderController);
-
-    AjaxLoaderController.$inject = ['$rootScope'];
+    var app = angular.module('myApp');
+    
+    app.controller('AjaxLoaderController', ['$rootScope', AjaxLoaderController]);
 
     function AjaxLoaderController($rootScope) {
 
