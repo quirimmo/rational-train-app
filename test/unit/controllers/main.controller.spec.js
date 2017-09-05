@@ -17,17 +17,47 @@ describe('MainController', function() {
     let trainsStationMocked = {
         ArrayOfObjStationData: {
             objStationData: [{
-
-            }]
+                    Traincode: 'code1'
+                },
+                {
+                    Traincode: 'code2'
+                }
+            ]
         }
     };
-    let trainsMovementsMocked = [{
+    let trainsMovementsMocked = {
         ArrayOfObjTrainMovements: {
             objTrainMovements: [{
-
-            }]
+                    TrainCode: 'code1',
+                    LocationFullName: 'bar1'
+                },
+                {
+                    TrainCode: 'code1',
+                    LocationFullName: 'bar2'
+                },
+                {
+                    TrainCode: 'code1',
+                    LocationFullName: 'Arklow'
+                },
+                {
+                    TrainCode: 'code1',
+                    LocationFullName: 'foo1'
+                },
+                {
+                    TrainCode: 'code1',
+                    LocationFullName: 'foo2'
+                },
+                {
+                    TrainCode: 'code1',
+                    LocationFullName: 'Shankill'
+                },
+                {
+                    TrainCode: 'code1',
+                    LocationFullName: 'bar3'
+                }
+            ]
         }
-    }];
+    };
     let trainServiceMock = {
         getTrainsByStation: function() {
             return $q.resolve(trainsStationMocked);
@@ -36,17 +66,7 @@ describe('MainController', function() {
             return $q.resolve(trainsMovementsMocked);
         }
     };
-    let trainsByStationMock = [{
-        StationDesc: "Docklands",
-        StationAlias: "",
-        StationLatitude: "53.3509",
-        StationLongitude: "-6.23929",
-        StationCode: "DCKLS",
-        StationId: "84",
-        StationLatitude: "53.3509",
-        StationLongitude: "-6.23929"
-    }];
-
+    
     beforeEach(function() {
         module('myApp');
         module('templates');
@@ -158,15 +178,20 @@ describe('MainController', function() {
                 expect(controller.clicked).toEqual(true);
             });
 
-            it('should set up correctly the trainsList', function() {
-                spyOn($q, 'all').and.returnValue($q.resolve([]));
+            it('should set up correctly the trainsList adding the movements and filtering only the relevant ones', function() {
+                spyOn($q, 'all').and.returnValue($q.resolve([trainsMovementsMocked]));
                 expect(controller.trainsList).toEqual([]);
                 controller.searchTrains();
                 $scope.$digest();
-                // here I should expect the list populated
-                // but need to pass all the objects correctly step by step 
-                // through the mocking objects
-                expect(controller.trainsList).toEqual([]);
+                expect(controller.trainsList).toEqual([{
+                    Traincode: 'code1',
+                    movements: [
+                        { TrainCode: 'code1', LocationFullName: 'Arklow' },
+                        { TrainCode: 'code1', LocationFullName: 'foo1' },
+                        { TrainCode: 'code1', LocationFullName: 'foo2' },
+                        { TrainCode: 'code1', LocationFullName: 'Shankill' }
+                    ]
+                }]);
             });
 
         });

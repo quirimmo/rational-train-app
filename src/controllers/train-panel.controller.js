@@ -25,7 +25,7 @@
         vm.getStationPosition = getStationPosition;
         vm.isLate = isLate;
         vm.isTrainPositionDefined = isTrainPositionDefined;
-
+        
         init();
 
         function init() {
