@@ -1,23 +1,45 @@
-fdescribe('trainService', function() {
+describe('trainService', function() {
 
-    let trainService, distanceService, $http, $httpBackend, ENDPOINTS_CONSTANTS, $q;
+    let trainService, distanceService, $http, $httpBackend, ENDPOINTS_CONSTANTS, $q, $timeout;
+
+    let mockedStations = [{
+        StationDesc: 'Italy',
+        StationLatitude: 100,
+        StationLongitude: 100
+    }, {
+        StationDesc: 'France',
+        StationLatitude: 200,
+        StationLongitude: 200
+    }, {
+        StationDesc: 'Germany',
+        StationLatitude: 50,
+        StationLongitude: 50
+    }];
+
+    let mockedCurrentPosition = {
+        latitude: 0,
+        longitude: 0
+    };
 
     beforeEach(function() {
         module('myApp');
         module(function($provide) {
             $provide.value('distanceService', {
-
+                calculateDistance: function() {
+                    return $q.resolve();
+                }
             });
         });
 
 
-        inject(function(_trainService_, _$http_, _$httpBackend_, _ENDPOINTS_CONSTANTS_, _HTTP_CONSTANTS_, _$q_) {
+        inject(function(_$timeout_, _trainService_, _$http_, _$httpBackend_, _ENDPOINTS_CONSTANTS_, _HTTP_CONSTANTS_, _$q_) {
             trainService = _trainService_;
             $http = _$http_;
             $httpBackend = _$httpBackend_;
             ENDPOINTS_CONSTANTS = _ENDPOINTS_CONSTANTS_;
             HTTP_CONSTANTS = _HTTP_CONSTANTS_;
             $q = _$q_;
+            $timeout = _$timeout_;
         });
 
     });
@@ -83,7 +105,27 @@ fdescribe('trainService', function() {
     describe('orderStationsByName', function() {
 
         it('should return an array of the stations sorted by name', function() {
-            expect(2).toBe(5);
+            expect(trainService.orderStationsByName(mockedStations)).toEqual([{
+                StationDesc: 'France',
+                StationLatitude: 200,
+                StationLongitude: 200
+            }, {
+                StationDesc: 'Germany',
+                StationLatitude: 50,
+                StationLongitude: 50
+            }, {
+                StationDesc: 'Italy',
+                StationLatitude: 100,
+                StationLongitude: 100
+            }]);
+        });
+
+    });
+
+    describe('orderStationsByDistance', function() {
+
+        it('should return a promise', function() {
+            expect(trainService.orderStationsByDistance(mockedStations, mockedCurrentPosition)).toEqual(new Promise((resolve, reject) => {}));
         });
 
     });
