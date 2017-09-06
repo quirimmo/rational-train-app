@@ -62,6 +62,8 @@ The list of the trains will provide few details, and clicking on the open detail
 
 See the below section about possible issues for further details about the functionalities and some case you may/should encounter.
 
+The application is fully responsive and it adapts the layout depending on the devices sizes. You can easily test that opening your dev tools (on chrome for example) and switching to the mobile view.
+
 # Application Structure
 
 The irishtrail service doesn't accept cross origin requests from localhost, creating a classic CORS issue. In a "perfect world", if I was managing the service, I would add the parameter `Access-Control-Allow-Origin: *` to the header of the responses. Being the web service not manageable, I bypassed the issue using a simple **proxy mirror server**.
