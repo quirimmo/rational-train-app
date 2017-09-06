@@ -14,6 +14,7 @@
                 controllerAs: 'vm',
                 resolve: {
                     allStations: ['$rootScope', '$timeout', 'trainService', 'NavigatorGeolocation', function($rootScope, $timeout, trainService, NavigatorGeolocation) {
+                        
                         // starting the loading using timeout in order to wait that the angular view has been loaded
                         $timeout(function() {
                             $rootScope.$broadcast('start-loading', {
@@ -45,18 +46,17 @@
                                 }
                             }
                         }
+
+                        function onError(err) {
+                            // stop the loading and throw the error
+                            $rootScope.$broadcast('stop-loading', {});
+                            throw new Error(err);
+                        }
                     }]
                 }
             };
-
             $stateProvider.state(mainState);
-            $urlRouterProvider.otherwise('main');
-
-            function onError(err) {
-                // stop the loading and throw the error
-                $rootScope.$broadcast('stop-loading', {});
-                throw new Error(err);
-            }
+            $urlRouterProvider.otherwise('main');            
         }
     ]);
 

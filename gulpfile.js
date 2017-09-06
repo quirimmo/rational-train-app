@@ -57,7 +57,6 @@
             'src/*/*.js',
             'src/config.js'
         ],
-        PARTIALS: 'partials.min.js',
         PARTIALS_HTML_SOURCES: [
             'src/**/*.html',
             '!src/index.html'
@@ -79,6 +78,7 @@
     gulp.task('serve-no-watch', ['clean-tmp'], serveNoWatch);
     gulp.task('serve-dist', ['start-mirror-proxy'], serveDist);
     gulp.task('unit-test', unitTest);
+    gulp.task('unit-test-travis', ['compile-templates'], unitTest);
     gulp.task('unit-test-watch', unitTestWatch);
     gulp.task('protractor-test', ['serve-no-watch'], runProtractorTests);
     gulp.task('publish', ['clean-dist'], publish);
@@ -105,7 +105,7 @@
         // get all the styles concatenating them and leaving our style file at the end, so we can override all the external rules from our styles
         let allStyles = [].concat(PATHS.EXTERNAL_STYLES, PATHS.APP_STYLES);
         let cssSources = gulp.src(allStyles, { read: false });
-        let templatesSources = gulp.src(`${PATHS.TMP_APP}/${PATHS.PARTIALS}`, { read: false });
+        let templatesSources = gulp.src(`${PATHS.TMP_APP}/partials.min.js`, { read: false });
 
         return target
             .pipe(inject(templatesSources, { name: 'templates', ignorePath: 'tmp/' }))
@@ -219,10 +219,10 @@
             let target = gulp.src('src/index.html');
 
             return target
-                .pipe(inject(gulp.src('dist/node-components.js', { read: false }), { name: 'node', ignorePath: 'dist/' }))
-                .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), { ignorePath: 'dist/' }))
-                .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), { name: 'templates', ignorePath: 'dist/' }))
-                .pipe(inject(gulp.src('dist/all.min.js', { read: false }), { name: 'all', ignorePath: 'dist/' }))
+                .pipe(inject(gulp.src('dist/node-components.js', { read: false }), { name: 'node', ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/global-styles.css', { read: false }), { ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/partials.min.js', { read: false }), { name: 'templates', ignorePath: 'dist/', addRootSlash: false }))
+                .pipe(inject(gulp.src('dist/all.min.js', { read: false }), { name: 'all', ignorePath: 'dist/', addRootSlash: false }))
                 .pipe(gulp.dest(PATHS.DIST_APP));
 
         }

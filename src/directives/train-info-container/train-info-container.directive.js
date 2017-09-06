@@ -18,7 +18,7 @@
         };
         return directive;
 
-        function link(scope, element, attrs, $ctrl) {
+        function link(scope, element, attrs) {
             scope.flexValue = attrs.flexValue;
         }
     }
