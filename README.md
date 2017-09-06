@@ -13,7 +13,7 @@ I developed all the application using the current versions on my system:
 - node.js: **6.11.0**
 - npm: **4.5.0**
 
-If you may have installed a prior version of node.js, and you need to install also the new version, you can use **Node Version Manager** in order to have manage multiple versions of node.js and simply switch among them through **nvm**
+If you may have installed a prior version of node.js, and you need to install also the new version, you can use **Node Version Manager** in order to manage multiple versions of node.js and simply switch among them through **nvm**
 
 # Installation
 
@@ -31,7 +31,7 @@ In order to run the application, from the root of your project, simply execute t
 
 `gulp`
 
-This will serve the project on the address [http://localhost:300/](http://localhost:300/)
+This will serve the project on the address [http://localhost:3000/](http://localhost:3000/)
 
 So open your browser and point to the above link and you should see the application running correctly. Confirm the "Allow to retrieve your position" popup that you will see appearing on your page.
 
@@ -66,7 +66,7 @@ See the below section about possible issues for further details about the functi
 
 The irishtrail service doesn't accept cross origin requests from localhost, creating a classic CORS issue. In a "perfect world", if I was managing the service, I would add the parameter `Access-Control-Allow-Origin: *` to the header of the responses. Being the web service not manageable, I bypassed the issue using a simple **proxy mirror server**.
 
-This server is automatically started through the gulp serve task so you don't need to manually start it. It runs on `0.0.0.0:900`.
+This server is automatically started through the gulp serve task so you don't need to manually start it. It runs on `0.0.0.0:9000`.
 
 Actually all the requests from the application are done to this proxy server, which will redirect the request to the irishrail service, and will get back the response to the application.
 
@@ -90,7 +90,7 @@ Again, if you want to run them but not closing the process after the first execu
 
 `gulp unit-test-watch`
 
-In this way the process will be running and watching changes on the spec files or js files, re running the test every time you change something, to ensure that every change doesn't introduce breaks in the tests.
+In this way the process will be running and watching changes on the spec files or js files, re running the tests every time you change something, to ensure that every change doesn't introduce breaks in the tests.
 
 # E2E Tests
 
@@ -103,6 +103,8 @@ Everything is set up and already running through the command:
 But unfortunately I didn't have time to implement also this kind of tests.
 
 In order to execute the tests, you need a pre step which will install locally **selenium** needed for the execution:
+
+`node_modules/protractor/bin/webdriver-manager update`
 
 Obviously, this task will take care also of starting your app through the `gulp serve-no-watch` task, needed in order to execute e2e tests (the app must be running for them).
 
